@@ -3,6 +3,7 @@ package com.zillix.zlxnape.demos
 	import com.zillix.zlxnape.BodyRegistry;
 	import com.zillix.zlxnape.ConnectedPixelGroup;
 	import com.zillix.zlxnape.EchoSprite;
+	import com.zillix.zlxnape.interfaces.IBoxSpawner;
 	import com.zillix.zlxnape.SpriteChain;
 	import com.zillix.zlxnape.InteractionGroups;
 	import com.zillix.zlxnape.ZlxNapeSprite;
@@ -29,17 +30,14 @@ package com.zillix.zlxnape.demos
 	 * ...
 	 * @author zillix
 	 */
-	public class ZlxNapeDemo extends FlxGroup
+	public class ZlxNapeDemo extends FlxGroup implements IBoxSpawner
 	{
 		[Embed(source = "../../../../data/player.png")]	public var BoxSprite:Class;
-		[Embed(source = "../../../../data/pixelTest1.png")]	public var PixelTest:Class;
-		[Embed(source = "../../../../data/pixelTest2.png")]	public var PixelTest2:Class;
 		
 		private static const CLEAN_FREQ:int = 1;
 		private var _cleanTime:Number = 0;
 		
 		protected var _player:Player;
-		protected var _boss:Boss;
 		
 		protected var _foreground:FlxGroup;
 		protected var _background:FlxGroup;
@@ -49,11 +47,17 @@ package com.zillix.zlxnape.demos
 		
 		protected var _space:Space;
 		
-		private var _bodyRegistry:BodyRegistry;
+		protected var _bodyRegistry:BodyRegistry;
 		
 		protected var _debug:Debug;
 		
 		protected var DEBUG_DRAW:Boolean = false;
+		
+		public static const ECHO_SPRITE_DEMO:int = 1;
+		public static const TENTACLE_DEMO:int = 2;
+		public static const POLYGON_READER_DEMO:int = 3;
+		public static const CONNECTED_PIXEL_GROUP_DEMO:int = 6;
+		public static const SPRITE_CHAIN_DEMO:int = 4;
 		
 		public function ZlxNapeDemo() : void
 		{
@@ -94,61 +98,6 @@ package com.zillix.zlxnape.demos
 			add(_foreground);
 			
 			setUpPlayer();
-			
-			// Test0- echo art
-			//echoSprite = new EchoSprite(100, 100, new FlxPoint(FlxG.width/2, FlxG.height/2), new FlxPoint(FlxG.width, FlxG.height), 0xff88ff88, space);
-			//foreground.add(echoSprite);
-			
-			// Test1- extracting/contracting tentacles
-			
-		/*	for (var i:int = 0; i < 200; i++)
-			{
-				spawnBox(Math.random() * FlxG.width, Math.random() * FlxG.height);
-			}
-			/*
-		
-			
-			player = new Player(10, 10, space);
-			add(player);
-			boss = new Boss(100, 10, space);
-			add(boss);*/
-			
-			
-			// Test2- reading bodies from pngs
-			/*var polygonReader:PolygonReader = new PolygonReader(20);
-			var bodyMap:BodyMap = polygonReader.readPolygon(PixelTest, -1, PolygonReader.SIMPLE_RECTANGLE_HORIZONTAL);
-			var body:Body = bodyMap.getBodyByIndex();
-			player = new Player(200, 10, space);
-			body.translateShapes(Vec2.weak(-player.width / 2, -player.height / 2));
-			
-			player.loadBody(bodyMap.getBodyByIndex());
-			
-			add(player);
-			
-			var obj:ZlxNapeSprite = new ZlxNapeSprite(300, 200, 20, 20, space);
-			obj.loadBody(bodyMap.getBodyByIndex(1));
-			add(obj);*/
-			
-			// Test3- chains
-			/*player = new Player(10, 10, space);
-			add(player);
-			chain = new SpriteChain(space);
-			chain.addSprite(player);
-			var box:ZlxNapeSprite;
-			for (var i:int = 0; i < 10; i++)
-			{
-				box = spawnBox(Math.random() * (FlxG.width - 200 + 100), Math.random() * (FlxG.height - 100));
-				box.collisionMask = ~InteractionGroups.BOX;
-				chain.addSprite(box);
-			}
-			*/
-			
-			// Test4- colored bodies
-			//var obj:ZlxNapeSprite = new ZlxNapeSprite(200, 200, 20, 20, space);
-			/*var obj:ExplodingSprite = new ExplodingSprite(200, 200, 20, 20, space);
-			obj.readImage(PixelTest2);
-			add(obj);
-			*/
 			
 			setUpListeners();
 		}
@@ -205,7 +154,7 @@ package com.zillix.zlxnape.demos
 			spawnBox(FlxG.mouse.screenX, FlxG.mouse.screenY);
 		}
 		
-		protected function spawnBox(x:Number, y:Number, width:int = 20, angle:Number = 0, color:uint = 0) : ZlxNapeSprite
+		public function spawnBox(x:Number, y:Number, width:int = 20, angle:Number = 0, color:uint = 0) : ZlxNapeSprite
 		{
 			var color:uint = 0xff000000 + Math.random() * 0xffffff; 
 			var box:EchoSprite = new EchoSprite(x, 

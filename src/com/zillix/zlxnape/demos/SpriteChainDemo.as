@@ -2,6 +2,8 @@ package com.zillix.zlxnape.demos
 {
 	import com.zillix.zlxnape.SpriteChain;
 	import com.zillix.zlxnape.ZlxNapeSprite;
+	import org.flixel.FlxG;
+	import com.zillix.zlxnape.InteractionGroups;
 	
 	/**
 	 * ...
@@ -15,21 +17,21 @@ package com.zillix.zlxnape.demos
 		{
 			super();
 			
-			chain = new SpriteChain(space);
-			chain.addSprite(player);
+			_chain = new SpriteChain(_space);
+			_chain.addSprite(_player);
 			var box:ZlxNapeSprite;
 			for (var i:int = 0; i < 10; i++)
 			{
 				box = spawnBox(Math.random() * (FlxG.width - 200 + 100), Math.random() * (FlxG.height - 100));
 				box.collisionMask = ~InteractionGroups.BOX;
-				chain.addSprite(box);
+				_chain.addSprite(box);
 			}
 		}
 		
-		override protected function setupPlayer()
+		override protected function setUpPlayer() : void
 		{
-			player = new Player(10, 10, space);
-			add(player);
+			_player = new Player(10, 10, _space, _bodyRegistry);
+			add(_player);
 		}
 		
 		override public function update() : void
@@ -38,15 +40,7 @@ package com.zillix.zlxnape.demos
 			
 			if (FlxG.keys.U)
 			{
-				if (chain)
-				{
-					chain.contract(30 * FlxG.elapsed);
-				}
-				
-				if (connectedGroup)
-				{
-					connectedGroup.contract(100 * FlxG.elapsed);
-				}
+				_chain.contract(30 * FlxG.elapsed);
 			}
 		}
 		

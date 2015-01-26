@@ -42,6 +42,15 @@ package com.zillix.zlxnape.demos
 		}
 		
 		
+		override public function update() : void
+		{
+			super.update();
+			
+			if (FlxG.keys.U)
+			{
+				_connectedGroup.contract(100 * FlxG.elapsed);
+			}
+		}
 	}
 
 }

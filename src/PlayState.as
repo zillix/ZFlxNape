@@ -1,7 +1,11 @@
 package
 {
+	import com.zillix.zlxnape.demos.ColoredBodyDemo;
 	import com.zillix.zlxnape.demos.ConnectedPixelGroupDemo;
 	import com.zillix.zlxnape.demos.EchoSpriteDemo;
+	import com.zillix.zlxnape.demos.PolygonReaderDemo;
+	import com.zillix.zlxnape.demos.SpriteChainDemo;
+	import com.zillix.zlxnape.demos.TentacleDemo;
 	import com.zillix.zlxnape.demos.ZlxNapeDemo;
 	
 	import adobe.utils.CustomActions;
@@ -42,12 +46,20 @@ package
 			// Test 1: EchoSprite effect
 			//_activeDemo = new EchoSpriteDemo();
 			
-			// Test 2: SpriteChain Tentacles
+			// Test 2: Tentacles
+			//_activeDemo = new TentacleDemo();
 			
-			// Test 3:
+			// Test 3: Polygon Reader Demo
+			//_activeDemo = new PolygonReaderDemo();
 			
-			// Test 5: ConnectedPixelGroup
-			_activeDemo = new ConnectedPixelGroupDemo();
+			// Test 4: SpriteChain Tentacles
+			//_activeDemo = new SpriteChainDemo();
+			
+			// Test 5: Exploding colored bodies
+			_activeDemo = new ColoredBodyDemo();
+			
+			// Test 6: ConnectedPixelGroup
+			//_activeDemo = new ConnectedPixelGroupDemo();
 			
 			add(_activeDemo);
 			

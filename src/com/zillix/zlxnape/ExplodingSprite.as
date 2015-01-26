@@ -1,5 +1,7 @@
 package com.zillix.zlxnape
 {
+	import com.zillix.zlxnape.demos.ZlxNapeDemo;
+	import com.zillix.zlxnape.interfaces.IBoxSpawner;
 	import flash.display.BitmapData;
 	import nape.geom.Vec2List;
 	import nape.phys.BodyType;
@@ -14,14 +16,16 @@ package com.zillix.zlxnape
 	 * ...
 	 * @author zillix
 	 */
-	public class ExplodingSprite extends NapeFlxSprite 
+	public class ExplodingSprite extends ZlxNapeSprite 
 	{
 		private var _polygonReader:PolygonReader;
 		private var _bodyMap:BodyMap;
+		private var _boxSpawner:IBoxSpawner;
 		
-		function ExplodingSprite(X:Number, Y:Number, Width:Number, Height:Number, s:Space, bodyType:BodyType =  null):void
+		function ExplodingSprite(X:Number, Y:Number, Width:Number, Height:Number, space:Space, bodyRegistry:BodyRegistry, boxSpawner:IBoxSpawner, bodyType:BodyType =  null):void
 		{
-			super(X, Y, Width, Height, s, bodyType);
+			super(X, Y, Width, Height, space, bodyRegistry, bodyType);
+			_boxSpawner = boxSpawner;
 		}
 		
 		public function readImage(ImageClass:Class) : void
@@ -65,7 +69,7 @@ package com.zillix.zlxnape
 			var comVector:Vec2 = Vec2.get();
 			var tangentVector:Vec2 = Vec2.get();
 			var velocityVector:Vec2 = Vec2.get();
-			var box:NapeFlxSprite;
+			var box:ZlxNapeSprite;
 			var explodeSpeed:Number = 5;
 			var index:int = 0;
 			while (iterator.hasNext())
@@ -86,7 +90,7 @@ package com.zillix.zlxnape
 					velocityVector.addeq(tangentVector.normalise().mul(body.angularVel * comVector.length))
 				}
 				var color:uint = _bodyMap.shapeColors[index];
-				box = PlayState.instance.spawnBox(worldVerts.at(0).x, worldVerts.at(0).y, 20, angle, color);
+				box = _boxSpawner.spawnBox(worldVerts.at(0).x, worldVerts.at(0).y, 20, angle, color);
 				box.body.velocity.set(velocityVector);
 				
 				index++;
