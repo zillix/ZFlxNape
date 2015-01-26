@@ -30,32 +30,18 @@ package com.zillix.zlxnape
 		
 		public function readImage(ImageClass:Class) : void
 		{
-			/*var bitmapData:BitmapData = (new ImageClass).bitmapData;
-			
-			var pixelScale:Number = width;
-			var matrix:Matrix = new Matrix();
-			matrix.scale(pixelScale, pixelScale);
-
-			var newBitmapData:BitmapData = new BitmapData(bitmapData.width * pixelScale, bitmapData.height * pixelScale, true, 0x000000);
-			newBitmapData.draw(bitmapData, matrix, null, null, null, true);
-			
-			var bitmap:Bitmap = new Bitmap(newBitmapData, PixelSnapping.NEVER, true);
-			*/
 			var pixelScale:int = width;
 			_polygonReader = new PolygonReader(pixelScale);
 			_bodyMap = _polygonReader.readPolygon(ImageClass ,-1, PolygonReader.COLOR_SINGLE_BODY);
 			loadGraphic(ImageClass);
 			this.scale.x = pixelScale;
 			this.scale.y = pixelScale;
-			//loadRotatedGraphic(ImageClass, 6, -1, false, true, 10 );
 			
 			var body:Body = _bodyMap.getBodyByIndex();
 			body.translateShapes(Vec2.weak(0, height/2));
 			
 			
 			loadBody(body);
-			_body.angularVel = 2;
-			
 		}
 		
 		public function explode() : void
@@ -75,7 +61,6 @@ package com.zillix.zlxnape
 			while (iterator.hasNext())
 			{
 				shape = iterator.next();
-				//var shapeColor:uint = 
 				worldVerts = shape.castPolygon.worldVerts;
 				comVector.set(shape.worldCOM.sub(bodyCOM, true));
 				velocityVector.set(comVector.copy(true).normalise().mul(explodeSpeed, true));
@@ -106,13 +91,6 @@ package com.zillix.zlxnape
 		override public function update() : void
 		{
 			super.update();
-			
-			
-			
-			if (FlxG.keys.justPressed("M") && this.alive)
-			{
-				explode();
-			}
 		}
 		
 	}

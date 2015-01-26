@@ -6,7 +6,8 @@ package com.zillix.zlxnape
 	import org.flixel.FlxSprite;
 	
 	/**
-	 * ...
+	 * Very simple visual effect.
+	 * Creates a shadow copy of the sprite that exists offset from the main sprite.
 	 * @author zillix
 	 */
 	public class EchoSprite extends ZlxNapeSprite 

@@ -83,19 +83,16 @@ package com.zillix.zlxnape.demos
 		
 		public function withdrawSegment() : void
 		{
-			var joint1:PivotJoint = joints[segmentIndex];
-			joint1.active = false;
-			var segment:ZlxNapeSprite = segments[segmentIndex];
-			segment.disable();
-			var joint2:PivotJoint = joints[segmentIndex + 1];
-			//joint1.active = false;
-			joint2.body1 = this.body;
-			//joint.anchor2.addeq(Vec2.weak(0, SEGMENT_HEIGHT));
-			//joint.active = false;
-			/*var segment:ZlxNapeSprite = segments[segmentIndex];
-			//segment.body.type = BodyType.KINEMATIC;
-			segment.body.position.addeq(Vec2.weak(Math.cos(segment.body.rotation) * SEGMENT_HEIGHT, Math.sin(segment.body.rotation) * SEGMENT_HEIGHT));*/
-			segmentIndex++;
+			if (segmentIndex < maxSegments - 1)
+			{
+				var joint1:PivotJoint = joints[segmentIndex];
+				joint1.active = false;
+				var segment:ZlxNapeSprite = segments[segmentIndex];
+				segment.disable();
+				var joint2:PivotJoint = joints[segmentIndex + 1];
+				joint2.body1 = this.body;
+				segmentIndex++;
+			}
 		}
 		
 		public function extendSegment() : void
@@ -105,13 +102,7 @@ package com.zillix.zlxnape.demos
 			var joint1:PivotJoint = joints[segmentIndex - 1];
 			joint1.active = true;
 			var joint2:PivotJoint = joints[segmentIndex];
-			//joint1.active = false;
 			joint2.body1 = segment.body;
-			//joint.anchor2.addeq(Vec2.weak(0, SEGMENT_HEIGHT));
-			//joint.active = false;
-			/*var segment:ZlxNapeSprite = segments[segmentIndex];
-			//segment.body.type = BodyType.KINEMATIC;
-			segment.body.position.addeq(Vec2.weak(Math.cos(segment.body.rotation) * SEGMENT_HEIGHT, Math.sin(segment.body.rotation) * SEGMENT_HEIGHT));*/
 			segmentIndex--;
 		}
 		
@@ -119,15 +110,6 @@ package com.zillix.zlxnape.demos
 		{
 			super.update();
 			_body.setVelocityFromTarget(new Vec2(FlxG.mouse.x, FlxG.mouse.y), _body.rotation, 5);
-			
-			if (FlxG.keys.justPressed("T"))
-			{
-					extendSegment();
-			}
-			if (FlxG.keys.justPressed("R"))
-			{
-				withdrawSegment();
-			}
 		}
 	}
 	

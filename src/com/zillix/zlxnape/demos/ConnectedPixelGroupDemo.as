@@ -46,10 +46,15 @@ package com.zillix.zlxnape.demos
 		{
 			super.update();
 			
-			if (FlxG.keys.U)
+			if (FlxG.keys.SPACE)
 			{
-				_connectedGroup.contract(100 * FlxG.elapsed);
+				_connectedGroup.contract(50 * FlxG.elapsed);
 			}
+		}
+		
+		override protected function get instructionsText() : String
+		{
+			return super.instructionsText + "\nSpace: Contract";
 		}
 	}
 

@@ -6,7 +6,7 @@ package com.zillix.utils
 	 * ...
 	 * @author zillix
 	 */
-	public class ZGroupUtil 
+	public class ZGroupUtils
 	{
 		public static function killGroup(gr:FlxGroup):void 
 		{

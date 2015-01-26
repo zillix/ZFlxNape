@@ -9,6 +9,7 @@ package com.zillix.zlxnape.demos
 	import com.zillix.zlxnape.ZlxNapeSprite;
 	import com.zillix.zlxnape.CallbackTypes;
 	import com.zillix.utils.ZMathUtils;
+	import com.zillix.utils.ZGroupUtils;
 	import flash.utils.Dictionary;
 	import nape.callbacks.CbEvent;
 	import nape.callbacks.InteractionCallback;
@@ -22,6 +23,7 @@ package com.zillix.zlxnape.demos
 	import nape.util.Debug;
 	import nape.geom.Vec2;
 	import org.flixel.FlxPoint;
+	import org.flixel.FlxText;
 	
 	import org.flixel.FlxGroup;
 	import org.flixel.FlxG;
@@ -38,6 +40,8 @@ package com.zillix.zlxnape.demos
 		private var _cleanTime:Number = 0;
 		
 		protected var _player:Player;
+		
+		protected var _cleaningGroups:FlxGroup;
 		
 		protected var _foreground:FlxGroup;
 		protected var _background:FlxGroup;
@@ -59,6 +63,8 @@ package com.zillix.zlxnape.demos
 		public static const CONNECTED_PIXEL_GROUP_DEMO:int = 6;
 		public static const SPRITE_CHAIN_DEMO:int = 4;
 		
+		private var _instructions:FlxText;
+		
 		public function ZlxNapeDemo() : void
 		{
 			_bodyRegistry = new BodyRegistry;
@@ -68,7 +74,11 @@ package com.zillix.zlxnape.demos
 			
 			add(_background);
 			
-			_space = new Space(new Vec2(0, 20));//70));
+			_instructions = new FlxText(0, 20, FlxG.width, instructionsText);
+			_instructions.setFormat(null, 20, 0x000000, "center");
+			add(_instructions);
+			
+			_space = new Space(new Vec2(0, 70));
 			
 			var floor:ZlxNapeSprite = new ZlxNapeSprite(0, 450, 640, 30, _space, _bodyRegistry, BodyType.STATIC);
 			floor.makeGraphic(640, 30, 0xff0000ff);
@@ -90,6 +100,12 @@ package com.zillix.zlxnape.demos
 			
 			_boxes = new FlxGroup();
 			_deadBoxes = new FlxGroup();
+			
+			_cleaningGroups = new FlxGroup();
+			_cleaningGroups.add(_foreground);
+			_cleaningGroups.add(_background);
+			_cleaningGroups.add(_boxes);
+			_cleaningGroups.add(_deadBoxes);
 			
 			add(_deadBoxes);
 			
@@ -116,11 +132,12 @@ package com.zillix.zlxnape.demos
 				_debug.flush();
 			}
 			
+			// Periodically purge groups of dead children
 			_cleanTime -= FlxG.elapsed;
 			if (_cleanTime < 0)
 			{
-				// TODO: Clean
 				_cleanTime = CLEAN_FREQ;
+				ZGroupUtils.cleanGroup(_cleaningGroups);
 			}
 			
 			if (FlxG.mouse.justPressed())
@@ -137,6 +154,12 @@ package com.zillix.zlxnape.demos
 					_debug.flush();
 				}
 			}
+		}
+		
+		protected function get instructionsText() : String
+		{
+			// Overridden by children
+			return "";
 		}
 		
 		protected function setUpPlayer() : void
@@ -218,6 +241,12 @@ package com.zillix.zlxnape.demos
 					}
 				}
 			}
+		}
+		
+		public function cleanUp() : void
+		{
+			_space.clear();
+			FlxG.stage.removeChild(_debug.display);
 		}
 	}
 	

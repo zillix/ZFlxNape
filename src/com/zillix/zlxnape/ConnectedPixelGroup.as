@@ -11,7 +11,9 @@ package com.zillix.zlxnape
 	import com.zillix.zlxnape.ZlxNapeSprite;
 	
 	/**
-	 * ...
+	 * Structure that tracks some quantity of joined sprites.
+	 * Reads pixels from an input image and spawns a corresponding number of bodies,
+	 * and then joins them in the same shape.
 	 * @author zillix
 	 */
 	public class ConnectedPixelGroup 
@@ -127,7 +129,8 @@ package com.zillix.zlxnape
 		{
 			for (var i:int = 0; i < numConnections; i++)
 			{
-				// Offset the edge by the perpendicular, so you start in the corner.
+				// Establish links at regular intervals between the two sprites.
+				// Offset the edge by the perpendicular of the vector between them, so you start in the corner.
 				// Find the negative offset, which is -2x the offset
 				// Figure out what fraction of the negative offset to add.
 				// EX:

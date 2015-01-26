@@ -27,6 +27,25 @@ package com.zillix.zlxnape.demos
 			add(_player);
 		}
 		
+		override public function update() : void
+		{
+			super.update();
+			
+			if (FlxG.keys.justPressed("SPACE"))
+			{
+				_boss.extendSegment();
+			}
+			if (FlxG.keys.justPressed("CONTROL"))
+			{
+				_boss.withdrawSegment();
+			}
+		}
+		
+		override protected function get instructionsText() : String
+		{
+			return super.instructionsText + "\nSpace: Extend\nControl: Contract\nWASD: Move player";
+		}
+		
 	}
 
 }

@@ -5,6 +5,8 @@ package com.zillix.zlxnape.demos
 	import org.flixel.FlxG;
 	import com.zillix.zlxnape.InteractionGroups;
 	
+	import nape.phys.BodyType;
+	
 	/**
 	 * ...
 	 * @author zillix
@@ -38,11 +40,17 @@ package com.zillix.zlxnape.demos
 		{
 			super.update();
 			
-			if (FlxG.keys.U)
+			if (FlxG.keys.SPACE)
 			{
 				_chain.contract(30 * FlxG.elapsed);
 			}
 		}
+		
+		override protected function get instructionsText() : String
+		{
+			return super.instructionsText + "\nSpace: Contract\nWASD: Move player";
+		}
+		
 		
 	}
 

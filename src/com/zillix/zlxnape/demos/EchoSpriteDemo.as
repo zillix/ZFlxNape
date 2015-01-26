@@ -15,8 +15,8 @@ package com.zillix.zlxnape.demos
 		{
 			super();
 			
-			_echoSprite = new EchoSprite(100, 100, new FlxPoint(FlxG.width/2, FlxG.height/2), new FlxPoint(FlxG.width, FlxG.height), 0xff88ff88, _space, _background);
-			_foreground.add(echoSprite);
+			_echoSprite = new EchoSprite(100, 100, 20, new FlxPoint(FlxG.width/2, FlxG.height/2), new FlxPoint(FlxG.width, FlxG.height), 0xff88ff88, _space, _bodyRegistry, _background);
+			_foreground.add(_echoSprite);
 		}
 		
 		override public function update() : void

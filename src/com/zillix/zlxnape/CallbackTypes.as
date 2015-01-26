@@ -3,7 +3,7 @@ package com.zillix.zlxnape
 	import nape.callbacks.CbType;
 	
 	/**
-	 * ...
+	 * List of callback types, used for distinguishing collisions.
 	 * @author zillix
 	 */
 	public class CallbackTypes 

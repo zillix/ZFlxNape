@@ -35,6 +35,11 @@ package com.zillix.zlxnape.demos
 			add(_player);
 		}
 		
+		override protected function get instructionsText() : String
+		{
+			return super.instructionsText + "\nWASD: Move player";
+		}
+		
 	}
 
 }
