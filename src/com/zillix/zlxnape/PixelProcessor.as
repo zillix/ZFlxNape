@@ -19,6 +19,7 @@ package com.zillix.zlxnape
 		private var _scale:Number;
 		private var _mode:uint;
 		private var _bodyMap:BodyMap;
+		private var _center:Boolean = false;
 		
 		private var _finalized:Boolean = false;
 		
@@ -29,9 +30,10 @@ package com.zillix.zlxnape
 		private var _shapeColors:Vector.<uint>;
 		
 		
-		function PixelProcessor(scale:Number, mode:uint)
+		function PixelProcessor(scale:Number, mode:uint, center:Boolean)
 		{
 			_scale = scale;
+			_center = center;
 			
 			if (mode == 0)
 			{
@@ -63,6 +65,7 @@ package com.zillix.zlxnape
 			
 			if (_mode == PolygonReader.SIMPLE_SQUARE
 				|| _mode == PolygonReader.SIMPLE_RECTANGLE_HORIZONTAL
+				|| _mode == PolygonReader.RECTANGLE_HORIZONTAL_SINGLE_BODY
 				|| _mode == PolygonReader.SIMPLE_SINGLE_BODY
 				|| _mode == PolygonReader.COLOR_SINGLE_BODY)
 			{
@@ -74,6 +77,7 @@ package com.zillix.zlxnape
 				
 				
 				if (_mode == PolygonReader.SIMPLE_SINGLE_BODY
+					|| _mode == PolygonReader.RECTANGLE_HORIZONTAL_SINGLE_BODY
 					|| _mode == PolygonReader.COLOR_SINGLE_BODY)
 				{
 					color = BLACK;
@@ -90,8 +94,8 @@ package com.zillix.zlxnape
 					_bodyMap.addBody(body, color);
 				}
 				
-				var x:Number = column * _scale - _scale / 2;
-				var y:Number = row * _scale - _scale / 2;
+				var x:Number = column * _scale;
+				var y:Number = row * _scale;
 				
 				var point:Point;
 				if (color in _positionSumsByColor)
@@ -118,7 +122,8 @@ package com.zillix.zlxnape
 				
 				
 				var shape:Shape;
-				if (_mode == PolygonReader.SIMPLE_RECTANGLE_HORIZONTAL
+				if ((_mode == PolygonReader.SIMPLE_RECTANGLE_HORIZONTAL
+						|| _mode == PolygonReader.RECTANGLE_HORIZONTAL_SINGLE_BODY)
 					&& body.shapes.length > 0)
 				{
 					var lastShape:Shape = body.shapes.at(0);
@@ -153,13 +158,17 @@ package com.zillix.zlxnape
 			var point:Point;
 			var body:Body;
 			var numPixels:int;
-			for (var color:String in _positionSumsByColor)
+			
+			if (_center)
 			{
-				point = _positionSumsByColor[color];
-				numPixels = Math.max(1, _numPixelsByColor[color]);
-				body = _bodyMap.getBodyByColor(uint(color));
-				
-				body.translateShapes(Vec2.weak(-point.x / numPixels, -point.y / numPixels));
+				for (var color:String in _positionSumsByColor)
+				{
+					point = _positionSumsByColor[color];
+					numPixels = Math.max(1, _numPixelsByColor[color]);
+					body = _bodyMap.getBodyByColor(uint(color));
+					
+					body.translateShapes(Vec2.weak(-point.x / numPixels, -point.y / numPixels));
+				}
 			}
 			
 			if (_mode == PolygonReader.COLOR_SINGLE_BODY)

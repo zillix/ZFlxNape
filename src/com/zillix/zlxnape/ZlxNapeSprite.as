@@ -1,6 +1,9 @@
 package com.zillix.zlxnape
 {
 	import nape.callbacks.CbType;
+	import nape.phys.Compound;
+	import nape.phys.FluidProperties;
+	import nape.shape.Circle;
 	import nape.shape.Polygon;
 	import nape.shape.Shape;
     import org.flixel.*;
@@ -32,41 +35,127 @@ package com.zillix.zlxnape
 		private var _accelerationRate:Number = 0;
 		
 		protected var _bodyRegistry:BodyRegistry;
+		
+		protected var _defaultScale:Number = 1;
+		
+		private var _collisionGroup:uint = 1;
         
-        public function ZlxNapeSprite(X:Number, 
-			Y:Number, 
-			Width:Number, 
-			Height:Number, 
-			space:Space,
-			bodyRegistry:BodyRegistry,
-			bodyType:BodyType =  null):void
+        public function ZlxNapeSprite(X:Number, Y:Number)
         {
             super(X, Y);
 			
 			// So we can use the FlxObject movement variables without worrying about Flixel trying to move it
 			moves = false;
+	    }
+		
+		public function get defaultScale() : Number
+		{
+			return _defaultScale;
+		}
+		
+		public function loadBody(body:Body, bodyContext:BodyContext, Width:Number, Height:Number, copyFields:Boolean = true) : void
+		{
+			_origOffset = new Vec2(Width / 2, Height / 2);
 			
+			if (body.space == null)
+			{
+				body.space = bodyContext.space;
+			}
+			
+			if (_body != null)
+			{
+				if (copyFields)
+				{
+					body.position.set(_body.position);
+					body.setShapeMaterials(_body.shapes.at(0).material);
+					body.velocity.set( _body.velocity);
+					body.compound = _body.compound;
+				}
+				
+				_body.compound = null;
+				_body.space = null;
+			}
+			else
+			{
+				body.position.set(Vec2.weak(x, y).add(origOffset));
+			}
+			
+			_body = body;
+			_bodyRegistry = bodyContext.bodyRegistry;
+			_bodyRegistry.registerBody(this, _body);
+			
+			addDefaultCbTypes();
+		}
+		
+		public function setCompound(com:Compound) : void
+		{
+			_body.compound = com;
+		}
+		
+		public function createCircleBody(radius:Number, bodyContext:BodyContext, bodyType:BodyType =  null, copyValues:Boolean = true) : void
+		{
+			initBody(bodyContext, bodyType, copyValues);
+			
+		    width = radius * 2;
+            height = radius * 2;
+			_origOffset = new Vec2(0, 0);
+			_body.shapes.add(new Circle(radius));
+			_body.position.set(new Vec2(x, y).add(origOffset));
+			_body.setShapeMaterials(Material.wood());
+			
+			finishCreatingBody(bodyContext);
+		}
+		
+		public function createBody(Width:Number, Height:Number, bodyContext:BodyContext, bodyType:BodyType =  null, copyValues:Boolean = true) : void
+		{
+			initBody(bodyContext, bodyType, copyValues);
+			
+		    width = Width;
+            height = Height;
+			_origOffset = new Vec2(width / 2, height / 2);
+			_body.shapes.add(new Polygon( Polygon.box(Width, Height)));
+			_body.position.set(new Vec2(x, y).add(origOffset));
+			_body.setShapeMaterials(Material.wood());
+			
+			finishCreatingBody(bodyContext);
+		}
+		
+		private function initBody(bodyContext:BodyContext, bodyType:BodyType = null, copyValues:Boolean = true) : void
+		{
 			if (bodyType == null)
 			{
 				bodyType = BodyType.DYNAMIC;
 			}
 			
-		    width = Width;
-            height = Height;
-			_origOffset = new Vec2(width / 2, height / 2);
-			_body = new Body(bodyType);
-			_body.shapes.add(new Polygon( Polygon.box(Width, Height)));
-			_body.position.set(new Vec2(x, y).add(origOffset));
-			_body.setShapeMaterials(Material.wood());
-			_body.space = space;
-			collisionGroup = InteractionGroups.GROUND;
-		
-			_bodyRegistry = bodyRegistry;
+			var newBody:Body = new Body(bodyType);
+			if (_body != null)
+			{
+				newBody.position.set(_body.position);
+				newBody.setShapeMaterials(_body.shapes.at(0).material);
+				newBody.velocity.set( _body.velocity)
+				_body.space = null;
+			}
+			
+			_body = newBody;
+			
+			_bodyRegistry = bodyContext.bodyRegistry;
 			_bodyRegistry.registerBody(this, _body);
-	    }
+		}
+		
+		private function finishCreatingBody(bodyContext:BodyContext) : void
+		{
+			collisionGroup = InteractionGroups.GROUND;
+			_body.space = bodyContext.space;
+			addDefaultCbTypes();
+		}
         
         override public function update():void
         {
+			if (_body == null)
+			{
+				return;
+			}
+			
           	x = _body.position.x - _origOffset.x;
 			y = _body.position.y - _origOffset.y;
 			angle = ZMathUtils.toDegrees(_body.rotation);
@@ -76,7 +165,7 @@ package com.zillix.zlxnape
 				
 				if (_body.velocity.length > _maxSpeed)
 				{
-					// apparently this works 0.0
+					// Yes, this works!
 					_body.velocity.length = _maxSpeed;
 				}
 				
@@ -113,22 +202,33 @@ package com.zillix.zlxnape
 		
 		override public function kill():void
 		{
-			_body.space.bodies.remove(_body);
+			if (_body.space != null)
+			{
+				_body.space.bodies.remove(_body);
+			}
 			_bodyRegistry.unregisterBody(this, _body);
 			super.kill();
 		}
+		
+		public function addDefaultCbTypes() : void {}
 		
 		public function addCbType(type:CbType) : void
 		{
 			_body.cbTypes.add(type);
 		}
 		
+		public function removeCbType(type:CbType) : void
+		{
+			_body.cbTypes.remove(type);
+		}
+		
 		public function set collisionGroup(group:uint) : void
 		{
+			/*_collisionGroup = group;
 			for (var i:int = 0; i < _body.shapes.length; i++)
 			{
 				Shape(_body.shapes.at(i)).filter.collisionGroup = group;
-			}
+			}*/
 		}
 		
 		public function set collisionMask(mask:uint) : void
@@ -161,20 +261,6 @@ package com.zillix.zlxnape
 		{
 			visible = true;
 			_body.space = space;
-		}
-		
-		public function loadBody(body:Body, copyFields:Boolean = true) : void
-		{
-			body.space = _body.space;
-			
-			if (copyFields)
-			{
-				body.position.set(_body.position);
-				body.setShapeMaterials(_body.shapes.at(0).material);
-				body.velocity.set( _body.velocity);
-			}
-			_body.space = null;
-			_body = body;
 		}
 		
 		public static function getOppositeDirection(direction:uint) : uint
@@ -220,6 +306,24 @@ package com.zillix.zlxnape
 					trace("ZlxNapeSprite.getEdgeVector: Unknown direction " + direction);
 					return Vec2.get(width / 2, 0);
 				
+			}
+		}
+		
+		public function makeFluid(density:Number, viscosity:Number) : void
+		{
+			var fluidProperties:FluidProperties = new FluidProperties(density, viscosity);
+			for (var i:int = 0; i < _body.shapes.length; i++)
+			{
+				Shape(_body.shapes.at(i)).fluidEnabled = true;
+				Shape(_body.shapes.at(i)).fluidProperties = fluidProperties;
+			}
+		}
+		
+		public function setMaterial(material:Material) : void
+		{
+			for (var i:int = 0; i < _body.shapes.length; i++)
+			{
+				Shape(_body.shapes.at(i)).material = material;
 			}
 		}
     }

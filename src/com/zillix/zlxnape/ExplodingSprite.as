@@ -22,13 +22,13 @@ package com.zillix.zlxnape
 		private var _bodyMap:BodyMap;
 		private var _boxSpawner:IBoxSpawner;
 		
-		function ExplodingSprite(X:Number, Y:Number, Width:Number, Height:Number, space:Space, bodyRegistry:BodyRegistry, boxSpawner:IBoxSpawner, bodyType:BodyType =  null):void
+		function ExplodingSprite(X:Number, Y:Number, boxSpawner:IBoxSpawner):void
 		{
-			super(X, Y, Width, Height, space, bodyRegistry, bodyType);
+			super(X, Y);
 			_boxSpawner = boxSpawner;
 		}
 		
-		public function readImage(ImageClass:Class) : void
+		public function readImage(ImageClass:Class, bodyContext:BodyContext) : void
 		{
 			var pixelScale:int = width;
 			_polygonReader = new PolygonReader(pixelScale);
@@ -40,8 +40,7 @@ package com.zillix.zlxnape
 			var body:Body = _bodyMap.getBodyByIndex();
 			body.translateShapes(Vec2.weak(0, height/2));
 			
-			
-			loadBody(body);
+			loadBody(body, bodyContext, width, width); 
 		}
 		
 		public function explode() : void
@@ -79,7 +78,6 @@ package com.zillix.zlxnape
 				box.body.velocity.set(velocityVector);
 				
 				index++;
-			
 			}
 			
 		

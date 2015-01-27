@@ -1,5 +1,6 @@
 package com.zillix.zlxnape.demos 
 {
+	import com.zillix.zlxnape.BodyContext;
 	import com.zillix.zlxnape.ExplodingSprite;
 	import com.zillix.zlxnape.ZlxNapeSprite;
 	
@@ -17,8 +18,8 @@ package com.zillix.zlxnape.demos
 		
 		public function ColoredBodyDemo() 
 		{
-			_explodingSprite = new ExplodingSprite(200, 200, 20, 20, _space, _bodyRegistry, this);
-			_explodingSprite.readImage(PixelTest2);
+			_explodingSprite = new ExplodingSprite(200, 200, this);
+			_explodingSprite.readImage(PixelTest2, new BodyContext(_space, _bodyRegistry));
 			_explodingSprite.body.angularVel = 2;	// Give it a little kick for fun
 			add(_explodingSprite);
 		}

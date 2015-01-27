@@ -1,6 +1,8 @@
 package com.zillix.zlxnape.demos 
 {
+	import com.zillix.zlxnape.BodyContext;
 	import com.zillix.zlxnape.BodyMap;
+	import com.zillix.zlxnape.BodyRegistry;
 	import com.zillix.zlxnape.PolygonReader;
 	import com.zillix.zlxnape.ZlxNapeSprite;
 	import nape.phys.Body;
@@ -20,18 +22,20 @@ package com.zillix.zlxnape.demos
 			var body:Body = bodyMap.getBodyByIndex();
 			body.translateShapes(Vec2.weak(-_player.width / 2, -_player.height / 2));
 			
-			_player.loadBody(bodyMap.getBodyByIndex());
+			var context:BodyContext = new BodyContext(_space, _bodyRegistry);
+			_player.loadBody(bodyMap.getBodyByIndex(), context, 25, 25);
 			
 			add(_player);
 			
-			var obj:ZlxNapeSprite = new ZlxNapeSprite(300, 200, 20, 20, _space, _bodyRegistry);
-			obj.loadBody(bodyMap.getBodyByIndex(1));
+			var obj:ZlxNapeSprite = new ZlxNapeSprite(300, 200);
+			obj.loadBody(bodyMap.getBodyByIndex(1), new BodyContext(_space, _bodyRegistry), 20, 20);
 			add(obj);
 		}
 		
 		override protected function setUpPlayer() : void
 		{
-			_player = new Player(200, 10, _space, _bodyRegistry);
+			_player = new Player(200, 10);
+			_player.createBody(20, 20, new BodyContext(_space, _bodyRegistry));
 			add(_player);
 		}
 		

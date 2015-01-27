@@ -1,5 +1,6 @@
 package com.zillix.zlxnape
 {
+	import nape.phys.BodyType;
 	import nape.space.Space;
 	import org.flixel.FlxGroup;
 	import org.flixel.FlxPoint;
@@ -16,27 +17,31 @@ package com.zillix.zlxnape
 		private var _maxOffset:int = 10;
 		private var _centerPoint:FlxPoint;
 		private var _dimensions:FlxPoint;
+		private var _backLayer:FlxGroup;
 		function EchoSprite(X:Number, 
-			Y:Number, 
-			Width:int, 
-			center:FlxPoint, 
-			dimensions:FlxPoint, 
-			color:uint, 
-			space:Space, 
-			bodyRegistry:BodyRegistry,
+			Y:Number,
+			screenDimensions:FlxPoint,
+			color:uint,
 			backLayer:FlxGroup) : void
 		{
-			super(X, Y, Width, Width, space, bodyRegistry);
+			super(X, Y);
+			_dimensions = screenDimensions;
+			_centerPoint = new FlxPoint(screenDimensions.x / 2, screenDimensions.y / 2);
+			_backLayer = backLayer;
+			this.color = color;
+		}
+		
+		override public function createBody(Width:Number, Height:Number, bodyContext:BodyContext, bodyType:BodyType =  null, copyValues:Boolean = true) : void
+		{
+			super.createBody(Width, Height, bodyContext, bodyType, copyValues);
+			
 			makeGraphic(Width, Width, color);
 			
-			_centerPoint = center;
-			_dimensions = dimensions;
-			
-			_echo = new FlxSprite(X, Y);
+			_echo = new FlxSprite(x, y);
 			_echo.makeGraphic(Width, Width, color * .5);
 			_echo.alpha = .5;
 			
-			backLayer.add(_echo);
+			_backLayer.add(_echo);
 		}
 		
 		override public function update() : void

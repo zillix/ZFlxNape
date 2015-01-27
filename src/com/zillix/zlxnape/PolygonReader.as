@@ -20,6 +20,8 @@ package com.zillix.zlxnape
 		public static const SIMPLE_SINGLE_BODY:uint = 3;
 		// Same as SIMPLE_SINGLE_BODY, but caches the pixel color for each shape
 		public static const COLOR_SINGLE_BODY:uint = 4;
+		// simple rectangle horizontal + single body
+		public static const RECTANGLE_HORIZONTAL_SINGLE_BODY:uint = 5;
 	
 		
 		private var _defaultScale:Number;
@@ -28,14 +30,14 @@ package com.zillix.zlxnape
 			_defaultScale = defaultScale;
 		}
 		
-		public function readPolygon(ImageClass:Class, scale:Number = -1, mode:int = 0) : BodyMap
+		public function readPolygon(ImageClass:Class, scale:Number = -1, mode:int = 0, center:Boolean = true, onlyColor:uint = 0x00000000) : BodyMap
 		{
 			if (scale <= 0)
 			{
 				scale = _defaultScale;
 			}
 			
-			var processor:PixelProcessor = new PixelProcessor(scale, mode);
+			var processor:PixelProcessor = new PixelProcessor(scale, mode, center);
 			
 			var bitmapData:BitmapData = (new ImageClass).bitmapData;
 			if (bitmapData != null)
@@ -45,7 +47,7 @@ package com.zillix.zlxnape
 				var bitmapWidth:uint = bitmapData.width;
 				var bitmapHeight:uint = bitmapData.height;
 			
-				var endIndex:int = bitmapHeight - 1;
+				var endIndex:int = bitmapHeight;
 				var row:uint = 0;
 				
 				while(row < endIndex)
@@ -56,8 +58,11 @@ package com.zillix.zlxnape
 						//Decide if this pixel/tile is solid (1) or not (0)
 						pixel = bitmapData.getPixel32(column, row);
 				
-						processor.processPixel(pixel, column, row, bitmapWidth, bitmapHeight);
-						
+						// Skip this pixel if we're filtering just for one color, and it doesn't match that color
+						if (onlyColor == 0 || pixel == onlyColor)
+						{
+							processor.processPixel(pixel, column, row, bitmapWidth, bitmapHeight);
+						}
 						column++;
 					}
 					if (row == endIndex)

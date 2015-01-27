@@ -1,5 +1,6 @@
 package com.zillix.zlxnape.demos
 {
+	import com.zillix.zlxnape.BodyContext;
 	import com.zillix.zlxnape.BodyRegistry;
 	import com.zillix.zlxnape.ConnectedPixelGroup;
 	import com.zillix.zlxnape.EchoSprite;
@@ -38,6 +39,9 @@ package com.zillix.zlxnape.demos
 		
 		private static const CLEAN_FREQ:int = 1;
 		private var _cleanTime:Number = 0;
+		
+		public var GRAVITY:Number = 70;
+		public static const FRAME_RATE :Number = 1 / 30;
 		
 		protected var _player:Player;
 		
@@ -78,19 +82,24 @@ package com.zillix.zlxnape.demos
 			_instructions.setFormat(null, 20, 0x000000, "center");
 			add(_instructions);
 			
-			_space = new Space(new Vec2(0, 70));
+			_space = new Space(new Vec2(0, GRAVITY));
 			
-			var floor:ZlxNapeSprite = new ZlxNapeSprite(0, 450, 640, 30, _space, _bodyRegistry, BodyType.STATIC);
+			var context:BodyContext = new BodyContext(_space, _bodyRegistry);
+			
+			var floor:ZlxNapeSprite = new ZlxNapeSprite(0, 450);
+			floor.createBody(640, 30, context, BodyType.STATIC);
 			floor.makeGraphic(640, 30, 0xff0000ff);
 			floor.addCbType(CallbackTypes.GROUND);
 			add(floor);
 			
-			floor = new ZlxNapeSprite(0, 0, 30, 480, _space, _bodyRegistry, BodyType.STATIC);
+			floor = new ZlxNapeSprite(0, 0);
+			floor.createBody(30, 480, context, BodyType.STATIC);
 			floor.makeGraphic(30, 480, 0xff0000ff);
 			floor.addCbType(CallbackTypes.GROUND);
 			add(floor);
 			
-			floor = new ZlxNapeSprite(610, 0, 30, 480, _space, _bodyRegistry, BodyType.STATIC);
+			floor = new ZlxNapeSprite(610, 0);
+			floor.createBody(30, 480, context, BodyType.STATIC);
 			floor.makeGraphic(30, 480, 0xff0000ff);
 			floor.addCbType(CallbackTypes.GROUND);
 			add(floor);
@@ -122,7 +131,7 @@ package com.zillix.zlxnape.demos
 		{
 			super.update();
 			
-			_space.step(1 / 30, 5, 3);
+			_space.step(FRAME_RATE, 5, 3);
 			super.update();	
 			
 			if (DEBUG_DRAW)
@@ -182,13 +191,10 @@ package com.zillix.zlxnape.demos
 			var color:uint = 0xff000000 + Math.random() * 0xffffff; 
 			var box:EchoSprite = new EchoSprite(x, 
 				y, 
-				width, 
-				new FlxPoint(FlxG.width / 2, FlxG.height / 2), 
 				new FlxPoint(FlxG.width, FlxG.height),
 				color, 
-				_space,
-				_bodyRegistry,
 				_background);
+			box.createBody(width, width, new BodyContext(_space, _bodyRegistry));
 			box.addCbType(CallbackTypes.GROUND);
 			box.addCbType(CallbackTypes.ABSORB);
 			box.collisionGroup = InteractionGroups.BOX;

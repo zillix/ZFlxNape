@@ -1,5 +1,6 @@
 package com.zillix.zlxnape.demos 
 {
+	import com.zillix.zlxnape.BodyContext;
 	import com.zillix.zlxnape.EchoSprite;
 	import org.flixel.FlxPoint;
 	import org.flixel.FlxG;
@@ -15,7 +16,8 @@ package com.zillix.zlxnape.demos
 		{
 			super();
 			
-			_echoSprite = new EchoSprite(100, 100, 20, new FlxPoint(FlxG.width/2, FlxG.height/2), new FlxPoint(FlxG.width, FlxG.height), 0xff88ff88, _space, _bodyRegistry, _background);
+			_echoSprite = new EchoSprite(100, 100, new FlxPoint(FlxG.width, FlxG.height), 0xff88ff88, _background);
+			_echoSprite.createBody(20, 20, new BodyContext(_space, _bodyRegistry));
 			_foreground.add(_echoSprite);
 		}
 		

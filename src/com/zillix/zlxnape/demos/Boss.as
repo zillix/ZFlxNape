@@ -1,5 +1,6 @@
 package com.zillix.zlxnape.demos
 {
+	import com.zillix.zlxnape.BodyContext;
 	import com.zillix.zlxnape.BodyRegistry;
 	import com.zillix.zlxnape.ZlxNapeSprite;
 	import com.zillix.zlxnape.CallbackTypes;
@@ -23,20 +24,26 @@ package com.zillix.zlxnape.demos
 		public var segments:Vector.<ZlxNapeSprite>;
 		private var maxSegments:int = 20;
 		private var segmentIndex:int = 0;
+		private var _target:FlxObject;
 		
 		public var joints:Vector.<PivotJoint>;
 		
-		public function Boss(X:Number, Y:Number, space:Space, bodyRegistry:BodyRegistry, target:FlxObject)
+		public function Boss(X:Number, Y:Number, target:FlxObject)
 		{
-			super(X, Y, 50, 50, space, bodyRegistry, BodyType.DYNAMIC);
-			makeGraphic(50, 50, 0xffff00ff);
+			super(X, Y);
+			_target = target;
+		}
+		
+		override public function createBody(Width:Number, Height:Number, bodyContext:BodyContext, bodyType:BodyType =  null, copyValues:Boolean = true) : void
+		{
+			super.createBody(Width, Height, bodyContext, bodyType, copyValues);
 			
 			collisionGroup = InteractionGroups.BOSS;
 			collisionMask = ~InteractionGroups.SEGMENT;
 			
 			addCbType(CallbackTypes.GROUND);
 			
-			initSegments(target);
+			initSegments(_target);
 		}
 		
 		private function initSegments(target:FlxObject) : void
@@ -62,7 +69,8 @@ package com.zillix.zlxnape.demos
 		
 		private function addSegment(obj:ZlxNapeSprite) : ZlxNapeSprite
 		{
-			var segment:ZlxNapeSprite = new ZlxNapeSprite(obj.x + obj.width/2 - SEGMENT_WIDTH / 2, obj.y + obj.height, SEGMENT_WIDTH, SEGMENT_HEIGHT, _body.space, _bodyRegistry);
+			var segment:ZlxNapeSprite = new ZlxNapeSprite(obj.x + obj.width / 2 - SEGMENT_WIDTH / 2, obj.y + obj.height);
+			segment.createBody(SEGMENT_WIDTH, SEGMENT_HEIGHT, new BodyContext(_body.space, _bodyRegistry));
 			segment.makeGraphic(SEGMENT_WIDTH, SEGMENT_HEIGHT, 0xffdddddd);
 			segment.collisionGroup = InteractionGroups.SEGMENT;
 			segment.collisionMask = ~InteractionGroups.SEGMENT;

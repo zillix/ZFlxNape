@@ -1,5 +1,6 @@
 package com.zillix.zlxnape.demos 
 {
+	import com.zillix.zlxnape.BodyContext;
 	import com.zillix.zlxnape.SpriteChain;
 	import com.zillix.zlxnape.ZlxNapeSprite;
 	import org.flixel.FlxG;
@@ -32,7 +33,8 @@ package com.zillix.zlxnape.demos
 		
 		override protected function setUpPlayer() : void
 		{
-			_player = new Player(10, 10, _space, _bodyRegistry);
+			_player = new Player(10, 10);
+			_player.createBody(20, 20, new BodyContext(_space, _bodyRegistry));
 			add(_player);
 		}
 		

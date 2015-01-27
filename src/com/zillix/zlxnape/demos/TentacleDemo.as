@@ -1,5 +1,6 @@
 package com.zillix.zlxnape.demos 
 {
+	import com.zillix.zlxnape.BodyContext;
 	import org.flixel.FlxG;
 	/**
 	 * ...
@@ -17,13 +18,15 @@ package com.zillix.zlxnape.demos
 				spawnBox(Math.random() * FlxG.width, Math.random() * FlxG.height);
 			}
 			
-			_boss = new Boss(100, 10, _space, _bodyRegistry, _player);
+			_boss = new Boss(100, 10, _player);
+			_boss.createBody(25, 25, new BodyContext(_space, _bodyRegistry));
 			add(_boss);
 		}
 		
 		override protected function setUpPlayer() : void
 		{
-			_player = new Player(10, 10, _space, _bodyRegistry);
+			_player = new Player(10, 10);
+			_player.createBody(20, 20, new BodyContext(_space, _bodyRegistry));
 			add(_player);
 		}
 		
