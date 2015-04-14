@@ -7,7 +7,7 @@ package com.zillix.zlxnape.demos
 	import org.flixel.FlxG;
 	/**
 	 * Creates an explodingSprite instance by loading a frog image.
-	 * When the M key is pressed, explode the frog.
+	 * When the Space key is pressed, explode the frog.
 	 * @author zillix
 	 */
 	public class ColoredBodyDemo extends ZlxNapeDemo 
@@ -19,7 +19,7 @@ package com.zillix.zlxnape.demos
 		public function ColoredBodyDemo() 
 		{
 			_explodingSprite = new ExplodingSprite(200, 200, this);
-			_explodingSprite.readImage(PixelTest2, new BodyContext(_space, _bodyRegistry));
+			_explodingSprite.readImage(PixelTest2, 20, new BodyContext(_space, _bodyRegistry));
 			_explodingSprite.body.angularVel = 2;	// Give it a little kick for fun
 			add(_explodingSprite);
 		}

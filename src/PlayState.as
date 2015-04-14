@@ -3,7 +3,6 @@ package
 	import com.zillix.zlxnape.ConnectedPixelGroup;
 	import com.zillix.zlxnape.demos.ColoredBodyDemo;
 	import com.zillix.zlxnape.demos.ConnectedPixelGroupDemo;
-	import com.zillix.zlxnape.demos.EchoSpriteDemo;
 	import com.zillix.zlxnape.demos.PolygonReaderDemo;
 	import com.zillix.zlxnape.demos.SpriteChainDemo;
 	import com.zillix.zlxnape.demos.TentacleDemo;
@@ -48,12 +47,11 @@ package
 			FlxG.bgColor = 0xffffffff;
 			
 			_demoText = new FlxText(50, 10, 200,
-				"1: Echo sprites" + 
-				"\n2: Tentacles" + 
-				"\n3: Polygon Reader" + 
-				"\n4: Sprite chains" + 
-				"\n5: Colored bodies" + 
-				"\n6: Connected pixel groups" + 
+				"1: Tentacles" + 
+				"\n2: Polygon Reader" + 
+				"\n3: Sprite chains" + 
+				"\n4: Colored bodies" + 
+				"\n5: Connected pixel groups" + 
 				"\n\nClick: Spawn box" + 
 				"\n\nP: Toggle debug draw");
 			_demoText.setFormat(null, 8, 0x000000);
@@ -72,25 +70,21 @@ package
 			
 			if (FlxG.keys.justPressed("ONE"))
 			{
-				setDemo(new EchoSpriteDemo());
+				setDemo(new TentacleDemo());
 			}
 			else if (FlxG.keys.justPressed("TWO"))
 			{
-				setDemo(new TentacleDemo());
+				setDemo(new PolygonReaderDemo());
 			}
 			else if (FlxG.keys.justPressed("THREE"))
 			{
-				setDemo(new PolygonReaderDemo());
+				setDemo(new SpriteChainDemo());
 			}
 			else if (FlxG.keys.justPressed("FOUR"))
 			{
-				setDemo(new SpriteChainDemo());
-			}
-			else if (FlxG.keys.justPressed("FIVE"))
-			{
 				setDemo(new ColoredBodyDemo());
 			}
-			else if (FlxG.keys.justPressed("SIX"))
+			else if (FlxG.keys.justPressed("FIVE"))
 			{
 				setDemo(new ConnectedPixelGroupDemo());
 			}

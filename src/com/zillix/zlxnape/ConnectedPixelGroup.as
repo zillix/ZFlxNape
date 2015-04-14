@@ -27,14 +27,15 @@ package com.zillix.zlxnape
 		private var _pivotJoints:Vector.<PivotJoint>;
 		private var _space:Space;
 		private var _maxDist:int = 1000;
-		private var _minDist:int = 1;
+		private var _minDist:int = 4;
 		private var _cemented:Boolean = false;
 		
 		function ConnectedPixelGroup(s:Space, available:Vector.<ZlxNapeSprite>) : void
 		{
 			_space = s;
 			_occupiedPoints = new Vector.<FlxPoint>();
-			_availableSprites = available
+			_availableSprites = available;
+			_availableSprites.reverse();
 			_usedSprites = new Vector.<ZlxNapeSprite>();
 			_joints = new Vector.<DistanceJoint>();
 			_pivotJoints = new Vector.<PivotJoint>();
@@ -67,7 +68,7 @@ package com.zillix.zlxnape
 						//Decide if this pixel/tile is solid (1) or not (0)
 						pixel = bitmapData.getPixel32(column, row);
 				
-						processPixel(pixel, column, row, bitmapWidth, bitmapHeight);
+						processPixel(pixel, row, column, bitmapWidth, bitmapHeight);
 						
 						column++;
 					}
@@ -121,8 +122,6 @@ package com.zillix.zlxnape
 					}
 				}
 			}
-			
-			cement();
 		}
 		
 		private function join(sprite1:ZlxNapeSprite, sprite2:ZlxNapeSprite, direction:int, numConnections:int = 1) : void

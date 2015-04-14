@@ -28,9 +28,8 @@ package com.zillix.zlxnape
 			_boxSpawner = boxSpawner;
 		}
 		
-		public function readImage(ImageClass:Class, bodyContext:BodyContext) : void
+		public function readImage(ImageClass:Class, pixelScale:int, bodyContext:BodyContext) : void
 		{
-			var pixelScale:int = width;
 			_polygonReader = new PolygonReader(pixelScale);
 			_bodyMap = _polygonReader.readPolygon(ImageClass ,-1, PolygonReader.COLOR_SINGLE_BODY);
 			loadGraphic(ImageClass);

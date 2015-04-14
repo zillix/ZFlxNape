@@ -13,12 +13,7 @@ package com.zillix.zlxnape.demos
 		{
 			super();
 			
-			for (var i:int = 0; i < 200; i++)
-			{
-				spawnBox(Math.random() * FlxG.width, Math.random() * FlxG.height);
-			}
-			
-			_boss = new Boss(100, 10, _player);
+			_boss = new Boss(100, 10, _player, _background);
 			_boss.createBody(25, 25, new BodyContext(_space, _bodyRegistry));
 			add(_boss);
 		}

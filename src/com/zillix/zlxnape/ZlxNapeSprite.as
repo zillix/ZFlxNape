@@ -25,9 +25,11 @@ package com.zillix.zlxnape
 		public static const DIRECTION_RIGHT:uint = 3;
 		public static const DIRECTION_BACKWARDS:uint = 4;
 		
-		protected var _body:Body; public function get body() : Body { return _body; }
+		protected var _body:Body; 
+		public function get body() : Body { return _body; }
 		
-		private var _origOffset:Vec2; public function get origOffset():Vec2 {return _origOffset;}
+		private var _origOffset:Vec2; 
+		public function get origOffset():Vec2 {return _origOffset;}
         
 		private var _target:FlxObject;
 		
@@ -224,11 +226,11 @@ package com.zillix.zlxnape
 		
 		public function set collisionGroup(group:uint) : void
 		{
-			/*_collisionGroup = group;
+			_collisionGroup = group;
 			for (var i:int = 0; i < _body.shapes.length; i++)
 			{
 				Shape(_body.shapes.at(i)).filter.collisionGroup = group;
-			}*/
+			}
 		}
 		
 		public function set collisionMask(mask:uint) : void

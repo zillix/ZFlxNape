@@ -21,6 +21,11 @@ package com.zillix.utils
 		{
 			return Math.sqrt(Math.pow(X - A, 2) + Math.pow(Y - B, 2));
 		}
+		
+		public static function rgbToHex(r:int, g:int, b:int, a:int = 255) : uint 
+		{
+			return a << 24 | r << 16 | g << 8 | b;
+		}
 	}
 	
 }

@@ -86,21 +86,19 @@ package com.zillix.zlxnape.demos
 			
 			var context:BodyContext = new BodyContext(_space, _bodyRegistry);
 			
-			var floor:ZlxNapeSprite = new ZlxNapeSprite(0, 450);
+			const FLOOR_COLOR:uint = 0xff0000ff;
+			var floor:ColorSprite = new ColorSprite(0, 450, FLOOR_COLOR);
 			floor.createBody(640, 30, context, BodyType.STATIC);
-			floor.makeGraphic(640, 30, 0xff0000ff);
 			floor.addCbType(CallbackTypes.GROUND);
 			add(floor);
 			
-			floor = new ZlxNapeSprite(0, 0);
+			floor = new ColorSprite(0, 0, FLOOR_COLOR);
 			floor.createBody(30, 480, context, BodyType.STATIC);
-			floor.makeGraphic(30, 480, 0xff0000ff);
 			floor.addCbType(CallbackTypes.GROUND);
 			add(floor);
 			
-			floor = new ZlxNapeSprite(610, 0);
+			floor = new ColorSprite(610, 0, FLOOR_COLOR);
 			floor.createBody(30, 480, context, BodyType.STATIC);
-			floor.makeGraphic(30, 480, 0xff0000ff);
 			floor.addCbType(CallbackTypes.GROUND);
 			add(floor);
 			
@@ -188,16 +186,18 @@ package com.zillix.zlxnape.demos
 		
 		public function spawnBox(x:Number, y:Number, width:int = 20, angle:Number = 0, color:uint = 0) : ZlxNapeSprite
 		{
-			var color:uint = 0xff000000 + Math.random() * 0xffffff; 
+			if (color == 0)
+			{
+				// Random color
+				color = 0xff000000 + Math.random() * 0xffffff; 
+			}
+			
 			var box:ColorSprite = new ColorSprite(x, 
 				y, 
 				color);
 			box.createBody(width, width, new BodyContext(_space, _bodyRegistry));
-			box.addCbType(CallbackTypes.GROUND);
-			box.addCbType(CallbackTypes.ABSORB);
 			box.collisionGroup = InteractionGroups.BOX;
 			box.body.rotation = ZMathUtils.toRadians(angle);
-			box.loadRotatedGraphic(BoxSprite, 32, -1, false, true);
 			
 			if (color != 0)
 			{

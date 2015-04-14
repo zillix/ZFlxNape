@@ -5,6 +5,7 @@ package com.zillix.zlxnape.demos
 	import com.zillix.zlxnape.ZlxNapeSprite;
 	import com.zillix.zlxnape.CallbackTypes;
 	import com.zillix.zlxnape.InteractionGroups;
+	import com.zillix.zlxnape.ColorSprite;
 	import flash.display.PixelSnapping;
 	import nape.constraint.PivotJoint;
 	import nape.geom.Vec2;
@@ -17,21 +18,24 @@ package com.zillix.zlxnape.demos
 	 * ...
 	 * @author zillix
 	 */
-	public class Boss extends ZlxNapeSprite 
+	public class Boss extends ColorSprite 
 	{
-		private var SEGMENT_WIDTH:int = 8;
-		private var SEGMENT_HEIGHT:int = 16;
-		public var segments:Vector.<ZlxNapeSprite>;
-		private var maxSegments:int = 20;
-		private var segmentIndex:int = 0;
+		private static const SEGMENT_WIDTH:int = 8;
+		private static const SEGMENT_HEIGHT:int = 16;
+		private static const MAX_SEGMENTS:int = 20;
+		private static const BOSS_COLOR:int = 0xffff22ff;
+		
+		private var _segments:Vector.<ZlxNapeSprite>;
+		private var _segmentIndex:int = 0;
 		private var _target:FlxObject;
+		private var _joints:Vector.<PivotJoint>;
+		private var _tentacleLayer:FlxGroup;
 		
-		public var joints:Vector.<PivotJoint>;
-		
-		public function Boss(X:Number, Y:Number, target:FlxObject)
+		public function Boss(X:Number, Y:Number, target:FlxObject, tentacleLayer:FlxGroup)
 		{
-			super(X, Y);
+			super(X, Y, BOSS_COLOR);
 			_target = target;
+			_tentacleLayer = tentacleLayer;
 		}
 		
 		override public function createBody(Width:Number, Height:Number, bodyContext:BodyContext, bodyType:BodyType =  null, copyValues:Boolean = true) : void
@@ -48,14 +52,13 @@ package com.zillix.zlxnape.demos
 		
 		private function initSegments(target:FlxObject) : void
 		{
-			joints = new Vector.<PivotJoint>();
-			segments = new Vector.<ZlxNapeSprite>();
+			_joints = new Vector.<PivotJoint>();
+			_segments = new Vector.<ZlxNapeSprite>();
 			
 			var base:ZlxNapeSprite = this;
-			for (var i:int = 0; i < maxSegments; i++)
+			for (var i:int = 0; i < MAX_SEGMENTS; i++)
 			{
 				base = addSegment(base);
-				
 				base.followTarget(target, .5, 20);
 			}
 			
@@ -69,49 +72,49 @@ package com.zillix.zlxnape.demos
 		
 		private function addSegment(obj:ZlxNapeSprite) : ZlxNapeSprite
 		{
-			var segment:ZlxNapeSprite = new ZlxNapeSprite(obj.x + obj.width / 2 - SEGMENT_WIDTH / 2, obj.y + obj.height);
+			const SEGMENT_COLOR:uint = 0xffdddddd;
+			var segment:ColorSprite = new ColorSprite(obj.x + obj.width / 2 - SEGMENT_WIDTH / 2, obj.y + obj.height, SEGMENT_COLOR);
 			segment.createBody(SEGMENT_WIDTH, SEGMENT_HEIGHT, new BodyContext(_body.space, _bodyRegistry));
-			segment.makeGraphic(SEGMENT_WIDTH, SEGMENT_HEIGHT, 0xffdddddd);
 			segment.collisionGroup = InteractionGroups.SEGMENT;
 			segment.collisionMask = ~InteractionGroups.SEGMENT;
-			segments.push(segment);
-			segment.addCbType(CallbackTypes.GROUND);
+			_segments.push(segment);
 			
-			PlayState.instance.add(segment);
+			_tentacleLayer.add(segment);
+			
 			var pivotPoint:Vec2 = Vec2.get(obj.x + obj.width/2, obj.y + obj.height);
 			var pivotJoint:PivotJoint = new PivotJoint(obj.body, segment.body, 
 				obj.body.worldPointToLocal(pivotPoint, true),
 				segment.body.worldPointToLocal(pivotPoint, true));
 			
 			pivotJoint.space = _body.space;
-			joints.push(pivotJoint);
+			_joints.push(pivotJoint);
 			
 			return segment;
 		}
 		
 		public function withdrawSegment() : void
 		{
-			if (segmentIndex < maxSegments - 1)
+			if (_segmentIndex < MAX_SEGMENTS - 1)
 			{
-				var joint1:PivotJoint = joints[segmentIndex];
+				var joint1:PivotJoint = _joints[_segmentIndex];
 				joint1.active = false;
-				var segment:ZlxNapeSprite = segments[segmentIndex];
+				var segment:ZlxNapeSprite = _segments[_segmentIndex];
 				segment.disable();
-				var joint2:PivotJoint = joints[segmentIndex + 1];
+				var joint2:PivotJoint = _joints[_segmentIndex + 1];
 				joint2.body1 = this.body;
-				segmentIndex++;
+				_segmentIndex++;
 			}
 		}
 		
 		public function extendSegment() : void
 		{
-			var segment:ZlxNapeSprite = segments[segmentIndex - 1];
+			var segment:ZlxNapeSprite = _segments[_segmentIndex - 1];
 			segment.enable(_body.space);
-			var joint1:PivotJoint = joints[segmentIndex - 1];
+			var joint1:PivotJoint = _joints[_segmentIndex - 1];
 			joint1.active = true;
-			var joint2:PivotJoint = joints[segmentIndex];
+			var joint2:PivotJoint = _joints[_segmentIndex];
 			joint2.body1 = segment.body;
-			segmentIndex--;
+			_segmentIndex--;
 		}
 		
 		public override function update() : void

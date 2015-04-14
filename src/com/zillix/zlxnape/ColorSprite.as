@@ -9,19 +9,16 @@ package com.zillix.zlxnape
 	 */
 	public class ColorSprite extends ZlxNapeSprite 
 	{
-		function ColorSprite(X:Number, 
-			Y:Number,
-			color:uint) : void
+		function ColorSprite(X:Number, Y:Number, Color:uint) : void
 		{
 			super(X, Y);
-			this.color = color;
+			color = Color;
 		}
 		
 		override public function createBody(Width:Number, Height:Number, bodyContext:BodyContext, bodyType:BodyType =  null, copyValues:Boolean = true) : void
 		{
 			super.createBody(Width, Height, bodyContext, bodyType, copyValues);
-			
-			makeGraphic(Width, Width, color);
+			makeGraphic(Width, Height, 0xff0000ff);
 		}
 	}
 }
