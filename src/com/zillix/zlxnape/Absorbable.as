@@ -16,13 +16,14 @@ package com.zillix.zlxnape
 	 */
 	public class Absorbable extends ZlxNapeSprite 
 	{
-		private var FADE_RATE:Number = 2;
+		private static const FADE_RATE:Number = 2;
 		
+		private var _powerLevelValue:int = 1;
+		private var _beingAssimilated:Boolean = false;
 		private var _beingAbsorbed:Boolean = false;
 		protected var _canBeAbsorbed:Boolean = true;
 		protected var _wasEjected:Boolean = false;
-		public var powerLevelValue:int = 1;
-		public var _beingAssimilated:Boolean = false;
+		
 		public function Absorbable(X:Number, Y:Number)
 		{
 			super(X, Y);
@@ -71,6 +72,16 @@ package com.zillix.zlxnape
 		public function get wasEjected() : Boolean
 		{
 			return _wasEjected;
+		}
+		
+		public function get powerLevelValue():int 
+		{
+			return _powerLevelValue;
+		}
+		
+		public function set powerLevelValue(value:int):void 
+		{
+			_powerLevelValue = value;
 		}
 		
 		public function eject(space:Space) : void

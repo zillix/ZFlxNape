@@ -2,8 +2,8 @@ package com.zillix.zlxnape.demos
 {
 	import com.zillix.zlxnape.BodyContext;
 	import com.zillix.zlxnape.BodyRegistry;
+	import com.zillix.zlxnape.ColorSprite;
 	import com.zillix.zlxnape.ConnectedPixelGroup;
-	import com.zillix.zlxnape.EchoSprite;
 	import com.zillix.zlxnape.interfaces.IBoxSpawner;
 	import com.zillix.zlxnape.SpriteChain;
 	import com.zillix.zlxnape.InteractionGroups;
@@ -189,11 +189,9 @@ package com.zillix.zlxnape.demos
 		public function spawnBox(x:Number, y:Number, width:int = 20, angle:Number = 0, color:uint = 0) : ZlxNapeSprite
 		{
 			var color:uint = 0xff000000 + Math.random() * 0xffffff; 
-			var box:EchoSprite = new EchoSprite(x, 
+			var box:ColorSprite = new ColorSprite(x, 
 				y, 
-				new FlxPoint(FlxG.width, FlxG.height),
-				color, 
-				_background);
+				color);
 			box.createBody(width, width, new BodyContext(_space, _bodyRegistry));
 			box.addCbType(CallbackTypes.GROUND);
 			box.addCbType(CallbackTypes.ABSORB);
