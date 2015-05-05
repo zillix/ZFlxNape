@@ -35,7 +35,7 @@ package com.zillix.zlxnape.demos
 	 */
 	public class ZlxNapeDemo extends FlxGroup implements IBoxSpawner
 	{
-		[Embed(source = "../../../../data/player.png")]	public var BoxSprite:Class;
+		[Embed(source = "data/player.png")]	public var BoxSprite:Class;
 		
 		private static const CLEAN_FREQ:int = 1;
 		private var _cleanTime:Number = 0;
@@ -54,8 +54,8 @@ package com.zillix.zlxnape.demos
 		protected var _deadBoxes:FlxGroup;
 		
 		protected var _space:Space;
-		
 		protected var _bodyRegistry:BodyRegistry;
+		protected var _context:BodyContext;
 		
 		protected var _debug:Debug;
 		
@@ -83,6 +83,8 @@ package com.zillix.zlxnape.demos
 			add(_instructions);
 			
 			_space = new Space(new Vec2(0, GRAVITY));
+			
+			_context = new BodyContext(_space, _bodyRegistry);
 			
 			var context:BodyContext = new BodyContext(_space, _bodyRegistry);
 			
@@ -213,22 +215,6 @@ package com.zillix.zlxnape.demos
 		{
 			var playerTouchGround:InteractionListener = new InteractionListener(CbEvent.BEGIN, InteractionType.COLLISION, CallbackTypes.PLAYER, CallbackTypes.GROUND, onPlayerLand);
 			_space.listeners.add(playerTouchGround);
-	
-			var absorb:InteractionListener = new InteractionListener(CbEvent.ONGOING, InteractionType.COLLISION, CallbackTypes.PLAYER, CallbackTypes.ABSORB, onPlayerAbsorb);
-			_space.listeners.add(absorb);
-		}
-		
-		private function onPlayerAbsorb(collision:InteractionCallback) : void
-		{
-			if (_bodyRegistry.getSprite(collision.int1) != null)
-			{
-				var obj:ZlxNapeSprite = _bodyRegistry.getSprite(collision.int1);
-				var obj2:ZlxNapeSprite = _bodyRegistry.getSprite(collision.int2);
-				if (obj is Player)
-				{
-					Player(obj).onAbsorb(obj2);
-				}
-			}
 		}
 		
 		private function onPlayerLand(collision:InteractionCallback) : void

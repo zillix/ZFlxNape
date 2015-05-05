@@ -1,6 +1,5 @@
 package com.zillix.utils
 {
-	
 	/**
 	 * ...
 	 * @author zillix
@@ -25,6 +24,11 @@ package com.zillix.utils
 		public static function rgbToHex(r:int, g:int, b:int, a:int = 255) : uint 
 		{
 			return a << 24 | r << 16 | g << 8 | b;
+		}
+		
+		public static function randomBetween(low:Number, high:Number) : Number
+		{
+			return Math.random() * (high - low) + low;
 		}
 	}
 	

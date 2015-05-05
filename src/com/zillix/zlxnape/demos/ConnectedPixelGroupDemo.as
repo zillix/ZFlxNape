@@ -15,7 +15,7 @@ package com.zillix.zlxnape.demos
 	 */
 	public class ConnectedPixelGroupDemo extends ZlxNapeDemo 
 	{
-		[Embed(source = "../../../../data/pixelTest4.png")]	public var PixelTest3:Class;
+		[Embed(source = "data/pixelTest4.png")]	public var PixelTest3:Class;
 		
 		protected var _connectedGroup:ConnectedPixelGroup;
 		

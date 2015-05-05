@@ -6,6 +6,7 @@ package
 	import com.zillix.zlxnape.demos.PolygonReaderDemo;
 	import com.zillix.zlxnape.demos.SpriteChainDemo;
 	import com.zillix.zlxnape.demos.TentacleDemo;
+	import com.zillix.zlxnape.demos.WaterDemo;
 	import com.zillix.zlxnape.demos.ZlxNapeDemo;
 	
 	import com.zillix.utils.ZGroupUtils;
@@ -52,6 +53,7 @@ package
 				"\n3: Sprite chains" + 
 				"\n4: Colored bodies" + 
 				"\n5: Connected pixel groups" + 
+				"\n6: Underwater" + 
 				"\n\nClick: Spawn box" + 
 				"\n\nP: Toggle debug draw");
 			_demoText.setFormat(null, 8, 0x000000);
@@ -87,6 +89,10 @@ package
 			else if (FlxG.keys.justPressed("FIVE"))
 			{
 				setDemo(new ConnectedPixelGroupDemo());
+			}
+			else if (FlxG.keys.justPressed("SIX"))
+			{
+				setDemo(new WaterDemo());
 			}
 		}
 		

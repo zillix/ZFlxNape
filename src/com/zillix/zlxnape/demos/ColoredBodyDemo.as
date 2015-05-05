@@ -12,7 +12,7 @@ package com.zillix.zlxnape.demos
 	 */
 	public class ColoredBodyDemo extends ZlxNapeDemo 
 	{
-		[Embed(source = "../../../../data/pixelTest2.png")]	public var PixelTest2:Class;
+		[Embed(source = "data/pixelTest2.png")]	public var PixelTest2:Class;
 		
 		private var _explodingSprite:ExplodingSprite;
 		

@@ -13,7 +13,7 @@ package com.zillix.zlxnape.demos
 	 */
 	public class PolygonReaderDemo extends ZlxNapeDemo 
 	{
-		[Embed(source = "../../../../data/pixelTest1.png")]	public var PixelTest:Class;
+		[Embed(source = "data/pixelTest1.png")]	public var PixelTest:Class;
 		
 		public function PolygonReaderDemo() 
 		{

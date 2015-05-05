@@ -38,9 +38,19 @@ package com.zillix.zlxnape.demos
 			_tentacleLayer = tentacleLayer;
 		}
 		
-		override public function createBody(Width:Number, Height:Number, bodyContext:BodyContext, bodyType:BodyType =  null, copyValues:Boolean = true) : void
+		override public function createBody(Width:Number, 
+											Height:Number, 
+											bodyContext:BodyContext,
+											bodyType:BodyType =  null,
+											copyValues:Boolean = true,
+											Scale:FlxPoint = null) : void
 		{
-			super.createBody(Width, Height, bodyContext, bodyType, copyValues);
+			super.createBody(Width,
+							Height,
+							bodyContext,
+							bodyType,
+							copyValues,
+							Scale);
 			
 			collisionGroup = InteractionGroups.BOSS;
 			collisionMask = ~InteractionGroups.SEGMENT;

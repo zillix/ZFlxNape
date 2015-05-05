@@ -47,9 +47,19 @@ package com.zillix.zlxnape.demos
 			maxVelocity.x = 100;
 		}
 		
-		override public function createBody(Width:Number, Height:Number, bodyContext:BodyContext, bodyType:BodyType =  null, copyValues:Boolean = true) : void
+		override public function createBody(Width:Number, 
+											Height:Number, 
+											bodyContext:BodyContext, 
+											bodyType:BodyType =  null,
+											copyValues:Boolean = true,
+											Scale:FlxPoint = null) : void
 		{
-			super.createBody(Width, Height, bodyContext, bodyType, copyValues);
+			super.createBody(Width,
+							Height,
+							bodyContext,
+							bodyType,
+							copyValues,
+							Scale);
 			
 			makeGraphic(Width, Height, 0xff00ff00);
 			
@@ -62,7 +72,7 @@ package com.zillix.zlxnape.demos
 			super.addDefaultCbTypes();
 			addCbType(CallbackTypes.PLAYER);
 			collisionGroup = InteractionGroups.PLAYER;
-			collisionMask = ~(InteractionGroups.NO_COLLIDE | InteractionGroups.PLAYER_ATTACK);
+			collisionMask = ~InteractionGroups.NO_COLLIDE;
 			
 			_body.allowRotation = false;
 		
@@ -81,21 +91,15 @@ package com.zillix.zlxnape.demos
 			this.body.setShapeMaterials(_normalFriction);
 		}
 		
-		public function onAbsorb(box:ZlxNapeSprite) : void
-		{
-			if (FlxG.keys.F)
-			{
-				box.collisionGroup = InteractionGroups.DEAD_BOX;
-				box.collisionMask = ~(InteractionGroups.BOX | InteractionGroups.PLAYER);
-				box.color = 0xff000000;
-				box.alpha = .5;
-			}
-		}
-		
 		override public function update() : void
 		{
 			super.update();
 			
+			processInput();
+		}
+		
+		protected function processInput() : void
+		{
 			var keyPressed:Boolean = false;
 			
 			if (FlxG.keys.pressed("D"))

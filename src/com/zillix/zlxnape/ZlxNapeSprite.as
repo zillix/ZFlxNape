@@ -28,23 +28,31 @@ package com.zillix.zlxnape
 		protected var _body:Body; 
 		public function get body() : Body { return _body; }
 		
-		private var _origOffset:Vec2; 
+		protected var _origOffset:Vec2; 
 		public function get origOffset():Vec2 {return _origOffset;}
         
 		private var _target:FlxObject;
+		protected var _minFollowDist:Number = 50;
 		
-		private var _maxSpeed:Number = 1000;
+		protected var _maxSpeed:Number = 1000;
 		private var _accelerationRate:Number = 0;
 		
 		protected var _bodyRegistry:BodyRegistry;
+		protected var _bodyContext:BodyContext;
 		
 		protected var _defaultScale:Number = 1;
 		
-		private var _collisionGroup:uint = 1;
+		private var _collisionGroup:uint = ~InteractionGroups.NO_COLLIDE;
+		
+		protected var _canRotate:Boolean = true;
+		
+		
         
         public function ZlxNapeSprite(X:Number, Y:Number)
         {
             super(X, Y);
+			
+			drag = new FlxPoint(0, 0);
 			
 			// So we can use the FlxObject movement variables without worrying about Flixel trying to move it
 			moves = false;
@@ -94,28 +102,47 @@ package com.zillix.zlxnape
 			_body.compound = com;
 		}
 		
-		public function createCircleBody(radius:Number, bodyContext:BodyContext, bodyType:BodyType =  null, copyValues:Boolean = true) : void
+		public function createCircleBody(radius:Number, 
+											bodyContext:BodyContext,
+											bodyType:BodyType =  null,
+											copyValues:Boolean = true,
+											Scale:FlxPoint = null) : void
 		{
+			if (Scale == null)
+			{
+				Scale = new FlxPoint(1, 1);
+			}
+			
 			initBody(bodyContext, bodyType, copyValues);
 			
-		    width = radius * 2;
-            height = radius * 2;
+		    width = radius * 2 * Scale.x;
+            height = radius * 2 * Scale.y;
 			_origOffset = new Vec2(0, 0);
-			_body.shapes.add(new Circle(radius));
+			_body.shapes.add(new Circle(radius * Scale.x));
 			_body.position.set(new Vec2(x, y).add(origOffset));
 			_body.setShapeMaterials(Material.wood());
 			
 			finishCreatingBody(bodyContext);
 		}
 		
-		public function createBody(Width:Number, Height:Number, bodyContext:BodyContext, bodyType:BodyType =  null, copyValues:Boolean = true) : void
+		public function createBody(Width:Number, 
+									Height:Number,
+									bodyContext:BodyContext,
+									bodyType:BodyType =  null,
+									copyValues:Boolean = true,
+									Scale:FlxPoint = null) : void
 		{
+			if (Scale == null)
+			{
+				Scale = new FlxPoint(1, 1);
+			}
+			
 			initBody(bodyContext, bodyType, copyValues);
 			
-		    width = Width;
-            height = Height;
+		    width = Width * Scale.x;
+            height = Height * Scale.y;
 			_origOffset = new Vec2(width / 2, height / 2);
-			_body.shapes.add(new Polygon( Polygon.box(Width, Height)));
+			_body.shapes.add(new Polygon( Polygon.box(Width * Scale.x, Height * Scale.y)));
 			_body.position.set(new Vec2(x, y).add(origOffset));
 			_body.setShapeMaterials(Material.wood());
 			
@@ -146,7 +173,9 @@ package com.zillix.zlxnape
 		
 		private function finishCreatingBody(bodyContext:BodyContext) : void
 		{
-			collisionGroup = InteractionGroups.GROUND;
+			collisionGroup = ~InteractionGroups.NO_COLLIDE;
+			collisionMask = ~InteractionGroups.NO_COLLIDE;
+			_bodyContext = bodyContext;
 			_body.space = bodyContext.space;
 			addDefaultCbTypes();
 		}
@@ -160,7 +189,11 @@ package com.zillix.zlxnape
 			
           	x = _body.position.x - _origOffset.x;
 			y = _body.position.y - _origOffset.y;
-			angle = ZMathUtils.toDegrees(_body.rotation);
+			
+			if (_canRotate)
+			{
+				angle = ZMathUtils.toDegrees(_body.rotation);
+			}
 			
 			if (_body.type != BodyType.STATIC)
 			{
@@ -194,9 +227,40 @@ package com.zillix.zlxnape
 				}
 			}
 			
+			if (drag.x > 0)
+			{
+				if (_body.velocity.x > 0)
+				{
+					_body.velocity.x = Math.max(0, _body.velocity.x - drag.x * FlxG.elapsed);
+				}
+				else
+				{
+					_body.velocity.x = Math.min(0, _body.velocity.x + drag.x * FlxG.elapsed);
+				}
+			}
+			
+			if (drag.y > 0)
+			{
+				if (_body.velocity.y> 0)
+				{
+					_body.velocity.y = Math.max(0, _body.velocity.y - drag.y * FlxG.elapsed);
+				}
+				else
+				{
+					_body.velocity.y = Math.min(0, _body.velocity.y + drag.y * FlxG.elapsed);
+				}
+			}
+			
 			if (_target != null)
 			{
-				_body.applyImpulse(Vec2.weak(_target.x, _target.y).sub(Vec2.weak(x, y), true).mul(_accelerationRate * FlxG.elapsed));
+				var direction:Vec2 = Vec2.get(_target.x, _target.y).sub(Vec2.get(x, y));
+				if (direction.length > _minFollowDist)
+				{
+					body.allowRotation = false;
+					body.rotation = 0;
+					var mult:Vec2 = direction.mul(_accelerationRate * FlxG.elapsed);
+					_body.applyImpulse(mult);
+				}
 			}
 			
 			super.update();
@@ -241,6 +305,22 @@ package com.zillix.zlxnape
 			}
 		}
 		
+		public function set fluidMask(mask:uint) : void
+		{
+			for (var i:int = 0; i < _body.shapes.length; i++)
+			{
+				Shape(_body.shapes.at(i)).filter.fluidMask = mask;
+			}
+		}
+		
+		public function set fluidEnabled(enabled:Boolean) : void
+		{
+			for (var i:int = 0; i < _body.shapes.length; i++)
+			{
+				Shape(_body.shapes.at(i)).fluidEnabled = enabled;
+			}
+		}
+		
 		public function followTarget(obj:FlxObject, acceleration:Number, maxSpeed:Number) : void
 		{
 			_target = obj;
@@ -257,12 +337,14 @@ package com.zillix.zlxnape
 		{
 			visible = false;
 			_body.space = null;
+			active = false;
 		}
 		
 		public function enable(space:Space) : void
 		{
 			visible = true;
 			_body.space = space;
+			active = true;
 		}
 		
 		public static function getOppositeDirection(direction:uint) : uint
@@ -319,14 +401,13 @@ package com.zillix.zlxnape
 				Shape(_body.shapes.at(i)).fluidEnabled = true;
 				Shape(_body.shapes.at(i)).fluidProperties = fluidProperties;
 			}
+			
+			body.type = BodyType.STATIC;
 		}
 		
 		public function setMaterial(material:Material) : void
 		{
-			for (var i:int = 0; i < _body.shapes.length; i++)
-			{
-				Shape(_body.shapes.at(i)).material = material;
-			}
+			_body.setShapeMaterials(material);
 		}
     }
 }
