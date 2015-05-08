@@ -268,7 +268,6 @@ package com.zillix.zlxnape
 					direction.length = 1;
 					var mult:Vec2 = direction.mul(_accelerationRate * FlxG.elapsed);
 					_body.applyImpulse(mult);
-					//trace("Impulse: " + mult.length + " " + mult.angle);
 				}
 			}
 			

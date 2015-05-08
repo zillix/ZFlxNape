@@ -6,7 +6,7 @@ package com.zillix.zlxnape.demos
 	import flash.utils.getTimer;
 	import org.flixel.FlxGroup;
 	/**
-	 * ...
+	 * Simple emitter implementation.
 	 * @author zillix
 	 */
 	public class BubbleEmitter 

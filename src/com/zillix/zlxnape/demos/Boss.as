@@ -16,7 +16,8 @@ package com.zillix.zlxnape.demos
 	import org.flixel.*;
 	
 	/**
-	 * ...
+	 * Simple body that contains a tentacle.
+	 * The tentacle follows the player, the body follows the mouse.
 	 * @author zillix
 	 */
 	public class Boss extends ColorSprite 

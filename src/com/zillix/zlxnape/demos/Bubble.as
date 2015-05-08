@@ -9,7 +9,7 @@ package com.zillix.zlxnape.demos
 	import nape.shape.Circle;
 	
 	/**
-	 * ...
+	 * Simple buoyant bubble.
 	 * @author zillix
 	 */
 	public class Bubble extends ZlxNapeSprite 

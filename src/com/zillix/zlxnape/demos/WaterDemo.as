@@ -6,7 +6,8 @@ package com.zillix.zlxnape.demos
 	import org.flixel.*;
 	
 	/**
-	 * Demonstrates the FluidRenderer
+	 * Demonstrates the FluidRenderer, a BodyChain as a tether,
+	 * 	and bodychains as plants.
 	 * @author zillix
 	 */
 	public class WaterDemo extends ZlxNapeDemo 

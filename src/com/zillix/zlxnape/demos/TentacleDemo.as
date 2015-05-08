@@ -3,7 +3,8 @@ package com.zillix.zlxnape.demos
 	import com.zillix.zlxnape.BodyContext;
 	import org.flixel.FlxG;
 	/**
-	 * ...
+	 * Demonstrates tentacles.
+	 * Shows how they can follow an object, expand, and contract.
 	 * @author zillix
 	 */
 	public class TentacleDemo extends ZlxNapeDemo 

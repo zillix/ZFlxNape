@@ -24,7 +24,7 @@ package com.zillix.zlxnape.demos
 	
 	
 	/**
-	 * ...
+	 * Basic implementation of a player, to be used for the demo
 	 * @author zillix
 	 */
 	public class Player extends ZlxNapeSprite 
@@ -32,8 +32,6 @@ package com.zillix.zlxnape.demos
 		
 		public var X_SPEED:int = 40;
 		public var JUMP_SPEED:int = 50;
-		public var DASH_SPEED:int = 100;
-		public var DASH_ANGLE_SPEED:int = 20000;
 		
 		private var _canJump:Boolean = false;
 		

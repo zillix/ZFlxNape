@@ -6,7 +6,7 @@ package com.zillix.zlxnape.demos
 	import nape.phys.FluidProperties;
 	
 	/**
-	 * ...
+	 * Simple class for a fluid body.
 	 * @author zillix
 	 */
 	public class Water extends ZlxNapeSprite 

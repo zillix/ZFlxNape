@@ -5,7 +5,7 @@ package com.zillix.zlxnape.demos
 	import com.zillix.zlxnape.BodyContext;
 	import nape.geom.Vec2;
 	/**
-	 * ...
+	 * A reimplementation of player, with better controls for swimming.
 	 * @author zillix
 	 */
 	public class SwimPlayer extends Player 

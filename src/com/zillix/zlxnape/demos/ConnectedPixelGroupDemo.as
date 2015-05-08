@@ -10,7 +10,13 @@ package com.zillix.zlxnape.demos
 	import nape.geom.Vec2;
 	import nape.phys.BodyType;
 	/**
-	 * ...
+	 * Demonstrates the ConnectedPixelGroup.
+	 * Given a set of objects and an input image, you can link the 
+	 * 		objects in a way that allows them to contract to form the image.
+	 * 
+	 * NOTE: This is really not a useful demo, since there are a lot of restrictions
+	 * 			on what can go in a ConnectedPixelGroup.
+	 * 
 	 * @author zillix
 	 */
 	public class ConnectedPixelGroupDemo extends ZlxNapeDemo 
