@@ -5,7 +5,6 @@ package com.zillix.zlxnape.demos
 	import com.zillix.zlxnape.ColorSprite;
 	import com.zillix.zlxnape.ConnectedPixelGroup;
 	import com.zillix.zlxnape.interfaces.IBoxSpawner;
-	import com.zillix.zlxnape.SpriteChain;
 	import com.zillix.zlxnape.InteractionGroups;
 	import com.zillix.zlxnape.ZlxNapeSprite;
 	import com.zillix.zlxnape.CallbackTypes;
@@ -78,7 +77,7 @@ package com.zillix.zlxnape.demos
 			
 			add(_background);
 			
-			_instructions = new FlxText(0, 20, FlxG.width, instructionsText);
+			_instructions = new FlxText(0, FlxG.height / 2 - 20, FlxG.width, instructionsText);
 			_instructions.setFormat(null, 20, 0x000000, "center");
 			add(_instructions);
 			
@@ -89,18 +88,28 @@ package com.zillix.zlxnape.demos
 			var context:BodyContext = new BodyContext(_space, _bodyRegistry);
 			
 			const FLOOR_COLOR:uint = 0xff0000ff;
+			
+			// Floor
 			var floor:ColorSprite = new ColorSprite(0, 450, FLOOR_COLOR);
 			floor.createBody(640, 30, context, BodyType.STATIC);
 			floor.addCbType(CallbackTypes.GROUND);
 			add(floor);
 			
+			// L Wall
 			floor = new ColorSprite(0, 0, FLOOR_COLOR);
 			floor.createBody(30, 480, context, BodyType.STATIC);
 			floor.addCbType(CallbackTypes.GROUND);
 			add(floor);
 			
+			// R Wall
 			floor = new ColorSprite(610, 0, FLOOR_COLOR);
 			floor.createBody(30, 480, context, BodyType.STATIC);
+			floor.addCbType(CallbackTypes.GROUND);
+			add(floor);
+			
+			// Ceiling
+			floor = new ColorSprite(0, 0, FLOOR_COLOR);
+			floor.createBody(640, 30, context, BodyType.STATIC);
 			floor.addCbType(CallbackTypes.GROUND);
 			add(floor);
 			

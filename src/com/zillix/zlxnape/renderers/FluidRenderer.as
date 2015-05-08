@@ -36,8 +36,16 @@ package com.zillix.zlxnape.renderers
 			circleSprite.graphics.beginFill(0xFF0000);
 			circleSprite.graphics.drawCircle(0, 0, CircleRadius);
 			circleSprite.graphics.endFill();
-			super(ScreenWidth, ScreenHeight, Group, circleSprite, Color); 
-			blurFilter = new BlurFilter(12, 12, 2);
+			super(ScreenWidth, 
+					ScreenHeight, 
+					Group, 
+					circleSprite, 
+					FlxG.camera,
+					Color,
+					false,
+					BlurRenderer.DETAIL_MAX); 
+					
+			_blurFilter = new BlurFilter(12, 12, 5);
 		
 		}
 	}

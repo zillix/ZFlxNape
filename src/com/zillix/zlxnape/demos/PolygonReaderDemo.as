@@ -25,6 +25,7 @@ package com.zillix.zlxnape.demos
 			var context:BodyContext = new BodyContext(_space, _bodyRegistry);
 			_player.loadBody(bodyMap.getBodyByIndex(), context, 25, 25);
 			
+			
 			add(_player);
 			
 			var obj:ZlxNapeSprite = new ZlxNapeSprite(300, 200);
@@ -41,7 +42,7 @@ package com.zillix.zlxnape.demos
 		
 		override protected function get instructionsText() : String
 		{
-			return super.instructionsText + "\nWASD: Move player";
+			return super.instructionsText + "\nARROWS: Move player";
 		}
 		
 	}

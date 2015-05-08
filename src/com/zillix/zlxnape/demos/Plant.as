@@ -8,7 +8,8 @@ package com.zillix.zlxnape.demos
 	import nape.phys.*;
 	
 	/**
-	 * ...
+	 * Demonstrates the use of the BodyChain class.
+	 * Created for my LD32 project, respire: http://ludumdare.com/compo/ludum-dare-32/?action=preview&uid=2460
 	 * @author zillix
 	 */
 	public class Plant extends ColorSprite 
@@ -31,7 +32,7 @@ package com.zillix.zlxnape.demos
 		public function Plant(X:Number, Y:Number, PlantLayer:FlxGroup, Context:BodyContext, Fronds:int = 3, FrondSize:int = 4, plantType:int = FALL_PLANT, minDist:int = 4, maxDist:int = 8)
 		{
 			super(X, Y, SUB_COLOR);
-			createBody(60, 20, Context, BodyType.STATIC);
+			createBody(100, 1, Context, BodyType.STATIC);
 			
 			// The base of the plant is invisible
 			visible = false;

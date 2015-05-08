@@ -26,6 +26,11 @@ package com.zillix.utils
 			return a << 24 | r << 16 | g << 8 | b;
 		}
 		
+		public static function setAlpha(color:uint, a:int) : uint 
+		{
+			return a << 24 | (0x00ffffff & color);
+		}
+		
 		public static function randomBetween(low:Number, high:Number) : Number
 		{
 			return Math.random() * (high - low) + low;

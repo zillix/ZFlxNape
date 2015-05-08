@@ -4,7 +4,6 @@ package
 	import com.zillix.zlxnape.demos.ColoredBodyDemo;
 	import com.zillix.zlxnape.demos.ConnectedPixelGroupDemo;
 	import com.zillix.zlxnape.demos.PolygonReaderDemo;
-	import com.zillix.zlxnape.demos.SpriteChainDemo;
 	import com.zillix.zlxnape.demos.TentacleDemo;
 	import com.zillix.zlxnape.demos.WaterDemo;
 	import com.zillix.zlxnape.demos.ZlxNapeDemo;
@@ -42,24 +41,35 @@ package
 		private var _activeDemo:ZlxNapeDemo;
 		private var _demoText:FlxText;
 		
+		private var _demoList:Vector.<Class>;
+		
 		override public function create():void
 		{
 			instance = this;
 			FlxG.bgColor = 0xffffffff;
 			
-			_demoText = new FlxText(50, 10, 200,
+			_demoText = new FlxText(50, 30, 200,
 				"1: Tentacles" + 
 				"\n2: Polygon Reader" + 
-				"\n3: Sprite chains" + 
-				"\n4: Colored bodies" + 
-				"\n5: Connected pixel groups" + 
-				"\n6: Underwater" + 
+				"\n3: Colored bodies" + 
+				"\n4: Connected pixel groups" + 
+				"\n5: Underwater" + 
 				"\n\nClick: Spawn box" + 
 				"\n\nP: Toggle debug draw");
 			_demoText.setFormat(null, 8, 0x000000);
 			add(_demoText);
 			
-			setDemo(new ColoredBodyDemo());
+			_demoList = Vector.<Class>(
+				[
+					TentacleDemo,
+					PolygonReaderDemo,
+					ColoredBodyDemo,
+					ConnectedPixelGroupDemo,
+					WaterDemo
+				]
+			);
+			
+			setDemo(4);
 			
 			Mouse.show();
 			
@@ -72,39 +82,46 @@ package
 			
 			if (FlxG.keys.justPressed("ONE"))
 			{
-				setDemo(new TentacleDemo());
+				setDemo(0);
 			}
 			else if (FlxG.keys.justPressed("TWO"))
 			{
-				setDemo(new PolygonReaderDemo());
+				setDemo(1);
 			}
 			else if (FlxG.keys.justPressed("THREE"))
 			{
-				setDemo(new SpriteChainDemo());
+				setDemo(2);
 			}
 			else if (FlxG.keys.justPressed("FOUR"))
 			{
-				setDemo(new ColoredBodyDemo());
+				setDemo(3);
 			}
 			else if (FlxG.keys.justPressed("FIVE"))
 			{
-				setDemo(new ConnectedPixelGroupDemo());
-			}
-			else if (FlxG.keys.justPressed("SIX"))
-			{
-				setDemo(new WaterDemo());
+				setDemo(4);
 			}
 		}
 		
-		private function setDemo(demo:ZlxNapeDemo) : void
+		private function setDemo(index:int) : void
 		{
-			if (_activeDemo != null)
+			if (index < 0 || index >= _demoList.length)
 			{
-				remove(_activeDemo);
-				_activeDemo.cleanUp();
+				return;
 			}
-			_activeDemo = demo;
-			add(_activeDemo);
+			
+			var demoClass:Class = _demoList[index];
+			var demo:ZlxNapeDemo = new demoClass() as ZlxNapeDemo;
+			
+			if (demo != null)
+			{
+				if (_activeDemo != null)
+				{
+					remove(_activeDemo);
+					_activeDemo.cleanUp();
+				}
+				_activeDemo = demo;
+				add(_activeDemo);
+			}
 		}
 	}
 }

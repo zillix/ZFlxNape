@@ -3,6 +3,7 @@ package com.zillix.zlxnape.demos
 	import com.zillix.zlxnape.BodyContext;
 	import com.zillix.zlxnape.ColorSprite;
 	import com.zillix.zlxnape.*;
+	import com.zillix.zlxnape.renderers.BlurRenderer;
 	import flash.display.DisplayObject;
 	import flash.display.Sprite;
 	import nape.constraint.Constraint;
@@ -15,7 +16,10 @@ package com.zillix.zlxnape.demos
 	import flash.utils.getTimer;
 	import org.flixel.*;
 	/**
-	 * ...
+	 * A submarine with a tube attached.
+	 * Restructs the players movement and demonstrates BodyChain.
+	 * Can extend segments.
+	 * Originally built for respire: http://ludumdare.com/compo/ludum-dare-32/?action=preview&uid=2460
 	 * @author zillix
 	 */
 	public class BreathingTube extends ZlxNapeSprite
@@ -26,7 +30,7 @@ package com.zillix.zlxnape.demos
 		private static const SEGMENT_WIDTH:int = 8;
 		private static const SEGMENT_HEIGHT:int = 16;
 		private static const MAX_SEGMENTS:int = 100;
-		private static const STARTING_SEGMENTS:int = 15;
+		private static const STARTING_SEGMENTS:int = 7;
 		private static const SEGMENT_COLOR:uint = 0xffdddddd;
 		
 		private var _desiredChainLength:int = STARTING_SEGMENTS;
@@ -39,11 +43,7 @@ package com.zillix.zlxnape.demos
 		private var _playerJoint:Constraint;
 		private var _player:Player;
 		
-		private var _bubbleEmitter:BubbleEmitter;
-		
 		private var _chain:BodyChain;
-		
-		private var _tubeRenderer:BlurRenderer;
 		
 		private var _initialSegmentMass:Number = 0;
 		private static const LOWER_SEGMENT_MASS_MATERIAL:Material = new Material(0, 0, 0, 2);
@@ -57,7 +57,7 @@ package com.zillix.zlxnape.demos
 			super(X, Y);
 			loadGraphic(SubmarineSprite);
 			scale.x = scale.y = 2;
-			createBody(25, 25, Context, BodyType.STATIC);
+			createBody(2, 2, Context, BodyType.STATIC);
 			
 			_tubeLayer = TubeLayer;
 			_player = player;
@@ -91,7 +91,6 @@ package com.zillix.zlxnape.demos
 			{
 				_chain.withdrawSegment();
 			}
-			//initSegments(_player);
 			
 			var lastSegment:ZlxNapeSprite = _chain.segments[_chain.segments.length - 1];
 			 _playerJoint = new PivotJoint(lastSegment.body, _player.body, 
@@ -101,27 +100,16 @@ package com.zillix.zlxnape.demos
 			_playerJoint.maxForce = 1000000;
 			
 			
-			//_tubeRenderer = new ChainRenderer(FlxG.width, FlxG.height, _chain.getArray(), SEGMENT_WIDTH, SEGMENT_HEIGHT, 0xff0000);
-			//PlayState.instance.tubeLayer.add(_tubeRenderer);
-			
 			for each (var segment:ZlxNapeSprite in _chain.segments)
 			{
 				_initialSegmentMass = segment.body.mass;
 				break;
 			}
-			
-			
-		
 		}
 		
 		public override function update() : void
 		{
 			super.update();
-			
-			if (_bubbleEmitter != null)
-			{
-				_bubbleEmitter.update();
-			}
 			
 			if (_desiredChainLength > _chain.currentSegmentCount)
 			{
@@ -131,9 +119,12 @@ package com.zillix.zlxnape.demos
 					_chain.extendSegment();
 				}
 			}
+			
+			// Artificically make segments below the player *lighter*.
+			// This keeps the player from being burdened by their weight.
 			for each (var segment:ZlxNapeSprite in _chain.segments)
 			{
-				if (segment.y > PlayState.instance.player.y + 15)
+				if (segment.y > _player.y + 15)
 				{
 					segment.body.mass = _initialSegmentMass * LOWER_SEGMENT_MASS_FRAC;
 					segment.setMaterial(LOWER_SEGMENT_MASS_MATERIAL);
@@ -144,13 +135,6 @@ package com.zillix.zlxnape.demos
 					segment.setMaterial(NORMAL_SEGMENT_MASS_MATERIAL);
 				}
 			}
-		}
-		
-		public function sever() : void
-		{
-			_playerJoint.active = false;
-			_bubbleEmitter = new BubbleEmitter(_chain.segments[_chain.segments.length - 1], PlayState.instance, 1);
-			_bubbleEmitter.startEmit();
 		}
 		
 		public function extend(amt:int) : void

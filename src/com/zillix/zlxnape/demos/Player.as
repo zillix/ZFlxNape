@@ -102,19 +102,19 @@ package com.zillix.zlxnape.demos
 		{
 			var keyPressed:Boolean = false;
 			
-			if (FlxG.keys.pressed("D"))
+			if (FlxG.keys.pressed("RIGHT"))
 			{
 				_body.velocity.x = X_SPEED;
 				keyPressed = true;
 			}
 			
-			if (FlxG.keys.pressed("A"))
+			if (FlxG.keys.pressed("LEFT"))
 			{
 				_body.velocity.x = -X_SPEED;
 				keyPressed = true;
 			}
 			
-			if (FlxG.keys.justPressed("W"))
+			if (FlxG.keys.justPressed("UP"))
 			{
 				if (_canJump)
 				{

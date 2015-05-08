@@ -1,5 +1,6 @@
 package com.zillix.zlxnape.demos
 {
+	import com.zillix.zlxnape.BodyChain;
 	import com.zillix.zlxnape.BodyContext;
 	import com.zillix.zlxnape.BodyRegistry;
 	import com.zillix.zlxnape.ZlxNapeSprite;
@@ -25,6 +26,7 @@ package com.zillix.zlxnape.demos
 		private static const MAX_SEGMENTS:int = 20;
 		private static const BOSS_COLOR:int = 0xffff22ff;
 		
+		private var _tentacle:BodyChain;
 		private var _segments:Vector.<ZlxNapeSprite>;
 		private var _segmentIndex:int = 0;
 		private var _target:FlxObject;
@@ -57,6 +59,11 @@ package com.zillix.zlxnape.demos
 			
 			addCbType(CallbackTypes.GROUND);
 			
+			/*_tentacle = new BodyChain(this, 
+									Vec2.get(0, 0),
+									_tentacleLayer,
+			_tentacle.init();
+			*/
 			initSegments(_target);
 		}
 		
@@ -69,7 +76,7 @@ package com.zillix.zlxnape.demos
 			for (var i:int = 0; i < MAX_SEGMENTS; i++)
 			{
 				base = addSegment(base);
-				base.followTarget(target, .5, 20);
+				base.followTarget(target, 1, 200, 50);
 			}
 			
 			for (var j:int = 0; j < 10; j++)

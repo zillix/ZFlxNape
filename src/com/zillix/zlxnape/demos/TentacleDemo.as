@@ -16,6 +16,8 @@ package com.zillix.zlxnape.demos
 			_boss = new Boss(100, 10, _player, _background);
 			_boss.createBody(25, 25, new BodyContext(_space, _bodyRegistry));
 			add(_boss);
+			
+			
 		}
 		
 		override protected function setUpPlayer() : void
@@ -41,7 +43,10 @@ package com.zillix.zlxnape.demos
 		
 		override protected function get instructionsText() : String
 		{
-			return super.instructionsText + "\nSpace: Extend\nControl: Contract\nWASD: Move player";
+			return super.instructionsText + "\nSpace: Extend" +
+			"\nControl: Contract" +
+			"\nARROWS: Move player" +
+			"\nMouse: Move boss";
 		}
 		
 	}
