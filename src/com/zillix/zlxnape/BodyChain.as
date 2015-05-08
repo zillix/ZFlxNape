@@ -16,7 +16,9 @@ package com.zillix.zlxnape
 	import org.flixel.FlxSprite;
 	
 	/**
-	 * ...
+	 * Arranges a group of bodies into a chain.
+	 * Offers many utility functions, such as extending or contracting the chain, 
+	 * 		or setting the alpha of all of the members.
 	 * @author zillix
 	 */
 	public class BodyChain

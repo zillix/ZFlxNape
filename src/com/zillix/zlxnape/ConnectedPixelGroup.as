@@ -1,19 +1,25 @@
 package com.zillix.zlxnape
 {
 	import flash.display.BitmapData;
+	import nape.constraint.Constraint;
 	import nape.constraint.DistanceJoint;
 	import nape.constraint.PivotJoint;
 	import nape.geom.Vec2;
+	import nape.phys.Material;
 	import nape.space.Space;
 	import nape.util.Debug;
+	import nape.phys.BodyType;
 	import org.flixel.*;
 	
 	import com.zillix.zlxnape.ZlxNapeSprite;
 	
 	/**
+	 * NOTE: This has very few applications! It's just kind of cool.
+	 * Requires that all pixels must be part of the same connected group.
+	 * 
 	 * Structure that tracks some quantity of joined sprites.
-	 * Reads pixels from an input image and spawns a corresponding number of bodies,
-	 * and then joins them in the same shape.
+	 * Reads pixels from an input image and connects the sprites in the same shape.
+	 * They can be contracted to form the input shape.
 	 * @author zillix
 	 */
 	public class ConnectedPixelGroup 
@@ -28,7 +34,9 @@ package com.zillix.zlxnape
 		private var _space:Space;
 		private var _maxDist:int = 1000;
 		private var _minDist:int = 4;
-		private var _cemented:Boolean = false;
+		
+		private var _cementedMass:int = 1000;
+		private var _cementedMaterial:Material = new Material(1, 1, 1, 1000);
 		
 		function ConnectedPixelGroup(s:Space, available:Vector.<ZlxNapeSprite>) : void
 		{
@@ -41,6 +49,7 @@ package com.zillix.zlxnape
 			_pivotJoints = new Vector.<PivotJoint>();
 		}
 		
+		// Read the input image and construct an internal map of the image
 		public function loadImage(ImageClass:Class) : void
 		{
 			var bitmapData:BitmapData = (new ImageClass).bitmapData;
@@ -91,6 +100,7 @@ package com.zillix.zlxnape
 		private static const CLEAR:uint = 0x00000000;
 		private static const BLACK:uint = 0xff000000;
 		
+		// Set up the sprites in the map
 		private function processPixel(color:uint, column:uint, row:uint, width:uint, height:uint) : void
 		{
 			if (color == EMPTY || color == CLEAR)
@@ -99,10 +109,13 @@ package com.zillix.zlxnape
 			}
 			
 			_occupiedPoints.push(new FlxPoint(column, row));
-			_pixelMap[column][row] = _availableSprites.pop();
+			var sprite:ZlxNapeSprite = _availableSprites.pop();
+			sprite.canRotate = false; // This just doesn't work at *all* if they rotate
+			_pixelMap[column][row] = sprite
 			_usedSprites.push(_pixelMap[column][row]);
 		}
 		
+		// Connect the sprites!
 		private function finishProcessing() : void
 		{
 			for each (var point:FlxPoint in _occupiedPoints)
@@ -124,6 +137,7 @@ package com.zillix.zlxnape
 			}
 		}
 		
+		// Connect one sprite to another, using a customizable number of links
 		private function join(sprite1:ZlxNapeSprite, sprite2:ZlxNapeSprite, direction:int, numConnections:int = 1) : void
 		{
 			for (var i:int = 0; i < numConnections; i++)
@@ -171,18 +185,20 @@ package com.zillix.zlxnape
 				
 		}
 		
+		// Pull everything close together
 		public function contract(amt:Number) : void
 		{
 			var longestJoint:int = 0;
 			for each (var joint:DistanceJoint in _joints)
 			{
-				joint.jointMax = Math.max(_minDist, joint.jointMax - amt);
-				longestJoint = Math.max(longestJoint, joint.jointMax);
-			}
-			
-			if (!_cemented && longestJoint < 5)
-			{
-				cement();
+				if (joint.space != null)
+				{
+					joint.jointMax = Math.max(_minDist, joint.jointMax - amt);
+					if (joint.jointMax < 5)
+					{
+						cementJoint(joint);
+					}
+				}
 			}
 		}
 		
@@ -191,6 +207,7 @@ package com.zillix.zlxnape
 			return _usedSprites;
 		}
 		
+		// Draw the joins
 		public function debugDraw(debug:Debug) : void
 		{
 			for each (var joint:DistanceJoint in _joints)
@@ -204,24 +221,20 @@ package com.zillix.zlxnape
 			}
 		}
 		
-		private function cement() : void
+		private function cementJoint(joint:DistanceJoint):void
 		{
-			if (_cemented)
-			{
-				return;
-			}
+			// Make the bodies REALLY HEAVY so they won't get pulled out of place.
 			
-			_cemented = true;
-			var pivotJoint:PivotJoint;
-			for each (var joint:DistanceJoint in _joints)
-			{
-				pivotJoint = new PivotJoint(joint.body1, joint.body2, joint.anchor1, joint.anchor2);
-				pivotJoint.space = _space;
-				pivotJoint.ignore = true;
-				joint.space = null;
-			}
+			joint.body1.mass = _cementedMass;
+			joint.body1.setShapeMaterials(_cementedMaterial);
+			joint.body2.mass = _cementedMass;
+			joint.body2.setShapeMaterials(_cementedMaterial);
 			
-			_pivotJoints.length = 0;
+			// Replace the distance joint with a pivot joint
+			var pivotJoint:PivotJoint = new PivotJoint(joint.body1, joint.body2, joint.anchor1, joint.anchor2);
+			pivotJoint.space = _space;
+			
+			joint.space = null;
 		}
 	}
 	

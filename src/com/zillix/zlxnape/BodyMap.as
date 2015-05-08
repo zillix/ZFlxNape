@@ -4,7 +4,8 @@ package com.zillix.zlxnape
 	import nape.phys.Body;
 	
 	/**
-	 * ...
+	 * Used by several internal structures.
+	 * Contains a list of bodies, with a quick lookup table for each body by its color.
 	 * @author zillix
 	 */
 	public class BodyMap 

@@ -13,7 +13,8 @@ package com.zillix.zlxnape
 	
 	import org.flixel.*;
 	/**
-	 * ...
+	 * Uses a PolygonReader to read in an image, which creates a body of the appropriate shape.
+	 * Can explode into individual pieces, each with the correct color.
 	 * @author zillix
 	 */
 	public class ExplodingSprite extends ZlxNapeSprite 
@@ -56,6 +57,8 @@ package com.zillix.zlxnape
 			var box:ZlxNapeSprite;
 			var explodeSpeed:Number = 5;
 			var index:int = 0;
+			
+			// Eject each pixel as a box with the correct color
 			while (iterator.hasNext())
 			{
 				shape = iterator.next();

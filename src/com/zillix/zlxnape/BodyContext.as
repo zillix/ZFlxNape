@@ -5,7 +5,7 @@ package com.zillix.zlxnape
 	import nape.space.Space;
 	
 	/**
-	 * ...
+	 * Simple structure to contain all information needed to construct a body.
 	 * @author zillix
 	 */
 	public class BodyContext 

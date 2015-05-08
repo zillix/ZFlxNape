@@ -177,6 +177,7 @@ package com.zillix.zlxnape
 			collisionMask = ~InteractionGroups.NO_COLLIDE;
 			_bodyContext = bodyContext;
 			_body.space = bodyContext.space;
+			_body.allowRotation = _canRotate;
 			addDefaultCbTypes();
 		}
         
@@ -321,11 +322,15 @@ package com.zillix.zlxnape
 			}
 		}
 		
-		public function followTarget(obj:FlxObject, acceleration:Number, maxSpeed:Number) : void
+		public function followTarget(obj:FlxObject, 
+									acceleration:Number,
+									maxSpeed:Number,
+									followDistance:int = 50) : void
 		{
 			_target = obj;
 			_maxSpeed = maxSpeed;
 			_accelerationRate = acceleration;
+			_minFollowDist = followDistance
 		}
 		
 		public function set maxSpeed(speed:Number ) : void
@@ -408,6 +413,12 @@ package com.zillix.zlxnape
 		public function setMaterial(material:Material) : void
 		{
 			_body.setShapeMaterials(material);
+		}
+		
+		public function set canRotate(val:Boolean) : void
+		{
+			_canRotate = val;
+			body.allowRotation = val;
 		}
     }
 }
