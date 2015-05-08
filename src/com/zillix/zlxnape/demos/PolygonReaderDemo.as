@@ -7,6 +7,7 @@ package com.zillix.zlxnape.demos
 	import com.zillix.zlxnape.ZlxNapeSprite;
 	import nape.phys.Body;
 	import nape.geom.Vec2;
+	import org.flixel.FlxPoint;
 	/**
 	 * ...
 	 * @author zillix
@@ -15,21 +16,28 @@ package com.zillix.zlxnape.demos
 	{
 		[Embed(source = "data/pixelTest1.png")]	public var PixelTest:Class;
 		
+		public static const SCALE:int = 20;
+		
 		public function PolygonReaderDemo() 
 		{
-			var polygonReader:PolygonReader = new PolygonReader(20);
+			var scale:FlxPoint = new FlxPoint(SCALE, SCALE);
+			var polygonReader:PolygonReader = new PolygonReader(SCALE);
 			var bodyMap:BodyMap = polygonReader.readPolygon(PixelTest, -1, PolygonReader.SIMPLE_RECTANGLE_HORIZONTAL);
-			var body:Body = bodyMap.getBodyByIndex();
-			body.translateShapes(Vec2.weak(-_player.width / 2, -_player.height / 2));
 			
+			var playerBody:Body = bodyMap.getBodyByIndex(0);
 			var context:BodyContext = new BodyContext(_space, _bodyRegistry);
-			_player.loadBody(bodyMap.getBodyByIndex(), context, 25, 25);
+			_player.loadBody(playerBody, context, 25, 25);
+			playerBody.translateShapes(Vec2.weak(-_player.width, -_player.height));
 			
-			
+			_player.pixels = bodyMap.getBitmapDataForBody(playerBody);
+			_player.scale = scale;
 			add(_player);
 			
+			var objBody:Body = bodyMap.getBodyByIndex(1);
 			var obj:ZlxNapeSprite = new ZlxNapeSprite(300, 200);
-			obj.loadBody(bodyMap.getBodyByIndex(1), new BodyContext(_space, _bodyRegistry), 20, 20);
+			obj.loadBody(objBody, new BodyContext(_space, _bodyRegistry), 20, 20);
+			obj.pixels = bodyMap.getBitmapDataForBody(objBody);
+			obj.scale = scale;
 			add(obj);
 		}
 		

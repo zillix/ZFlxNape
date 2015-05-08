@@ -247,6 +247,7 @@ package org.flixel
 		public function loadGraphic(Graphic:Class,Animated:Boolean=false,Reverse:Boolean=false,Width:uint=0,Height:uint=0,Unique:Boolean=false):FlxSprite
 		{
 			_bakedRotation = 0;
+			_bakedRotation = 0;
 			_pixels = FlxG.addBitmap(Graphic,Reverse,Unique);
 			if(Reverse)
 				_flipped = _pixels.width>>1;

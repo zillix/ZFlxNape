@@ -95,6 +95,10 @@ package com.zillix.zlxnape.demos
 			
 			processInput();
 		}
+		override public function draw():void
+		{
+			super.draw();
+		}
 		
 		protected function processInput() : void
 		{

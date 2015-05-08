@@ -13,6 +13,7 @@ package com.zillix.zlxnape
 	import nape.shape.Shape;
 	import nape.geom.Vec2;
 	import nape.shape.ShapeList;
+	import org.flixel.FlxPoint;
 
 	public class PixelProcessor
 	{
@@ -93,6 +94,8 @@ package com.zillix.zlxnape
 					body = new Body();
 					_bodyMap.addBody(body, color);
 				}
+				
+				_bodyMap.addPixel(body, color, new FlxPoint(column, row));
 				
 				var x:Number = column * _scale;
 				var y:Number = row * _scale;
