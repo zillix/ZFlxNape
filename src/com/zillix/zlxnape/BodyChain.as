@@ -60,7 +60,7 @@ package com.zillix.zlxnape
 		public var segmentDrag:FlxPoint = new FlxPoint(15, 15);
 		
 		
-		private static var DEFAULT_COLLOSION_MASK:uint = ~(InteractionGroups.SEGMENT | InteractionGroups .NO_COLLIDE);
+		private static var DEFAULT_COLLOSION_MASK:uint = ~(InteractionGroups.SEGMENT | InteractionGroups.NO_COLLIDE);
 		
 		
 		private static const SUB_COLOR:uint = 0xffffff00;
@@ -256,6 +256,14 @@ package com.zillix.zlxnape
 		public function get currentSegmentCount() : int
 		{
 			return segments.length - _segmentIndex;
+		}
+		
+		public function followTarget(target:FlxObject, acceleration:Number, maxSpeed:Number, followDist:Number = 50) : void
+		{
+			for each (var segment:ZlxNapeSprite in segments)
+			{
+				segment.followTarget(target, acceleration, maxSpeed, followDist);
+			}
 		}
 	}
 	

@@ -17,13 +17,21 @@ package com.zillix.zlxnape
 	
 	import com.zillix.utils.ZMathUtils;
 	
+	/**
+	 * Building block of ZlxNape.
+	 * Implementation of a FlxSprite that can contain a Nape Body.
+	 * Offers many utility functions.
+	 * @author zillix
+	 */
+	
+	
 	public class ZlxNapeSprite extends FlxSprite
     {
-		
-		public static const DIRECTION_FORWARD:uint = 1;
-		public static const DIRECTION_LEFT:uint = 2;
-		public static const DIRECTION_RIGHT:uint = 3;
-		public static const DIRECTION_BACKWARDS:uint = 4;
+		// Directions relative to the body
+		public static const DIRECTION_FORWARD:uint = 1;	// if angle == 0, this is to the right
+		public static const DIRECTION_LEFT:uint = 2; // if angle == 0, this is up
+		public static const DIRECTION_RIGHT:uint = 3; // if angle == 0, this is to the left
+		public static const DIRECTION_BACKWARDS:uint = 4; // if angle == 0, this is down
 		
 		protected var _body:Body; 
 		public function get body() : Body { return _body; }
@@ -257,10 +265,10 @@ package com.zillix.zlxnape
 				var direction:Vec2 = Vec2.get(_target.x, _target.y).sub(Vec2.get(x, y));
 				if (direction.length > _minFollowDist)
 				{
-					body.allowRotation = false;
-					body.rotation = 0;
+					direction.length = 1;
 					var mult:Vec2 = direction.mul(_accelerationRate * FlxG.elapsed);
 					_body.applyImpulse(mult);
+					//trace("Impulse: " + mult.length + " " + mult.angle);
 				}
 			}
 			

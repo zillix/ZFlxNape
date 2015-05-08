@@ -24,6 +24,7 @@ package com.zillix.zlxnape.demos
 		private static const SEGMENT_WIDTH:int = 8;
 		private static const SEGMENT_HEIGHT:int = 16;
 		private static const MAX_SEGMENTS:int = 20;
+		private static const SEGMENT_COLOR:uint = 0xffdddddd;
 		private static const BOSS_COLOR:int = 0xffff22ff;
 		
 		private var _tentacle:BodyChain;
@@ -59,79 +60,36 @@ package com.zillix.zlxnape.demos
 			
 			addCbType(CallbackTypes.GROUND);
 			
-			/*_tentacle = new BodyChain(this, 
-									Vec2.get(0, 0),
-									_tentacleLayer,
+			_tentacle = new BodyChain(this,
+										Vec2.get(),
+										_tentacleLayer,
+										_bodyContext,
+										MAX_SEGMENTS,
+										SEGMENT_WIDTH,
+										SEGMENT_HEIGHT,
+										SEGMENT_COLOR,
+										1,
+										4);
+									
+									
 			_tentacle.init();
-			*/
-			initSegments(_target);
-		}
-		
-		private function initSegments(target:FlxObject) : void
-		{
-			_joints = new Vector.<PivotJoint>();
-			_segments = new Vector.<ZlxNapeSprite>();
+			_tentacle.followTarget(_target, 20, 100, 5);
 			
-			var base:ZlxNapeSprite = this;
-			for (var i:int = 0; i < MAX_SEGMENTS; i++)
-			{
-				base = addSegment(base);
-				base.followTarget(target, 1, 200, 50);
-			}
 			
 			for (var j:int = 0; j < 10; j++)
 			{
 				withdrawSegment();
 			}
-			
-			
-		}
-		
-		private function addSegment(obj:ZlxNapeSprite) : ZlxNapeSprite
-		{
-			const SEGMENT_COLOR:uint = 0xffdddddd;
-			var segment:ColorSprite = new ColorSprite(obj.x + obj.width / 2 - SEGMENT_WIDTH / 2, obj.y + obj.height, SEGMENT_COLOR);
-			segment.createBody(SEGMENT_WIDTH, SEGMENT_HEIGHT, new BodyContext(_body.space, _bodyRegistry));
-			segment.collisionGroup = InteractionGroups.SEGMENT;
-			segment.collisionMask = ~InteractionGroups.SEGMENT;
-			_segments.push(segment);
-			
-			_tentacleLayer.add(segment);
-			
-			var pivotPoint:Vec2 = Vec2.get(obj.x + obj.width/2, obj.y + obj.height);
-			var pivotJoint:PivotJoint = new PivotJoint(obj.body, segment.body, 
-				obj.body.worldPointToLocal(pivotPoint, true),
-				segment.body.worldPointToLocal(pivotPoint, true));
-			
-			pivotJoint.space = _body.space;
-			_joints.push(pivotJoint);
-			
-			return segment;
 		}
 		
 		public function withdrawSegment() : void
 		{
-			if (_segmentIndex < MAX_SEGMENTS - 1)
-			{
-				var joint1:PivotJoint = _joints[_segmentIndex];
-				joint1.active = false;
-				var segment:ZlxNapeSprite = _segments[_segmentIndex];
-				segment.disable();
-				var joint2:PivotJoint = _joints[_segmentIndex + 1];
-				joint2.body1 = this.body;
-				_segmentIndex++;
-			}
+			_tentacle.withdrawSegment();
 		}
 		
 		public function extendSegment() : void
 		{
-			var segment:ZlxNapeSprite = _segments[_segmentIndex - 1];
-			segment.enable(_body.space);
-			var joint1:PivotJoint = _joints[_segmentIndex - 1];
-			joint1.active = true;
-			var joint2:PivotJoint = _joints[_segmentIndex];
-			joint2.body1 = segment.body;
-			_segmentIndex--;
+			_tentacle.extendSegment();
 		}
 		
 		public override function update() : void
