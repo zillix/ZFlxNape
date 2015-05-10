@@ -3,7 +3,6 @@ package com.zillix.zlxnape
 	import flash.display.BitmapData;
 	import flash.display.Graphics;
 	import nape.phys.Body;
-	import nape.shape.Polygon;
 	import nape.shape.Shape;
 	
 	/**
@@ -12,15 +11,15 @@ package com.zillix.zlxnape
 	 * Outputs a BodyMap, with the bodies grouped according to the input mode.
 	 * @author zillix
 	 */
-	public class PolygonReader 
+	public class PixelBodyReader 
 	{
 		private var _defaultScale:Number;
-		function PolygonReader(defaultScale:Number )
+		function PixelBodyReader(defaultScale:Number )
 		{
 			_defaultScale = defaultScale;
 		}
 		
-		public function readPolygon(ImageClass:Class, scale:Number = -1, mode:int = 0, center:Boolean = true, onlyColor:uint = 0x00000000) : BodyMap
+		public function readPixels(ImageClass:Class, scale:Number = -1, mode:int = 0, center:Boolean = true, onlyColor:uint = 0x00000000) : BodyMap
 		{
 			if (scale <= 0)
 			{

@@ -19,7 +19,7 @@ package com.zillix.zlxnape
 	 */
 	public class ExplodingSprite extends ZlxNapeSprite 
 	{
-		private var _polygonReader:PolygonReader;
+		private var _pixelBodyReader:PixelBodyReader;
 		private var _bodyMap:BodyMap;
 		private var _boxSpawner:IBoxSpawner;
 		
@@ -31,10 +31,10 @@ package com.zillix.zlxnape
 		
 		public function readImage(ImageClass:Class, pixelScale:int, bodyContext:BodyContext) : void
 		{
-			_polygonReader = new PolygonReader(pixelScale);
+			_pixelBodyReader = new PixelBodyReader(pixelScale);
 			
 			// Read the body, joining all colors into the same body.
-			_bodyMap = _polygonReader.readPolygon(ImageClass ,-1, PixelProcessor.COLOR_SINGLE_BODY);
+			_bodyMap = _pixelBodyReader.readPixels(ImageClass ,-1, PixelProcessor.COLOR_SINGLE_BODY);
 			loadGraphic(ImageClass);
 			this.scale.x = pixelScale;
 			this.scale.y = pixelScale;

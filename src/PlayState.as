@@ -3,7 +3,7 @@ package
 	import com.zillix.zlxnape.ConnectedPixelGroup;
 	import com.zillix.zlxnape.demos.ColoredBodyDemo;
 	import com.zillix.zlxnape.demos.ConnectedPixelGroupDemo;
-	import com.zillix.zlxnape.demos.PolygonReaderDemo;
+	import com.zillix.zlxnape.demos.PixelBodyReaderDemo;
 	import com.zillix.zlxnape.demos.TentacleDemo;
 	import com.zillix.zlxnape.demos.WaterDemo;
 	import com.zillix.zlxnape.demos.ZlxNapeDemo;
@@ -53,7 +53,7 @@ package
 			
 			_demoText = new FlxText(50, 30, 200,
 				"1: Tentacles" + 
-				"\n2: Polygon Reader" + 
+				"\n2: Pixel Body Reader" + 
 				"\n3: Colored bodies" + 
 				"\n4: Connected pixel groups" + 
 				"\n5: Underwater" + 
@@ -65,7 +65,7 @@ package
 			_demoList = Vector.<Class>(
 				[
 					TentacleDemo,
-					PolygonReaderDemo,
+					PixelBodyReaderDemo,
 					ColoredBodyDemo,
 					ConnectedPixelGroupDemo,
 					WaterDemo

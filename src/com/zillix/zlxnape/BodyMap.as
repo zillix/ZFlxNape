@@ -42,11 +42,12 @@ package com.zillix.zlxnape
 			
 		}
 		
+		// Tracks all of the pixels for each body.
+		// NOTE: this isn't super efficient! But it works.
 		public function addPixel(body:Body, color:uint, pixel:FlxPoint) : void
 		{
 			if (pixel != null)
 			{
-				
 				if (_pixelsByBody[body] == null)
 				{
 					_pixelsByBody[body] = new Vector.<FlxPoint>();
@@ -96,6 +97,10 @@ package com.zillix.zlxnape
 			return _shapeColors;
 		}
 		
+		// Construct a bitmap using the pixels contained in a body.
+		// This won't always match the input pixels used to create that body,
+		// if there is more than one body in the input image.
+		// NOTE: This isn't the smartest way to do it!
 		public function getBitmapDataForBody(body:Body) : BitmapData
 		{
 			if (_pixelsByBody[body] == null)
@@ -103,10 +108,11 @@ package com.zillix.zlxnape
 				return null;
 			}
 			
+			// Look up the color for this body.
+			// TODO: create a lookup map to quickly find the color given a body.
 			var color:uint = 0xff000000;
-			for (var c:String in  _bodiesByColor)
+			for (var c:String in _bodiesByColor)
 			{
-			
 				var bdy:Body = _bodiesByColor[c];
 				if (bdy == body)
 				{
@@ -115,11 +121,12 @@ package com.zillix.zlxnape
 			}
 			
 			
-			
 			var pixels:Vector.<FlxPoint> = _pixelsByBody[body];
 			var minPoint:FlxPoint;
 			var maxPoint:FlxPoint;
 			var pixel:FlxPoint;
+			
+			// Find the bounds of this image.
 			for each (pixel in pixels)
 			{
 				if (minPoint == null)
@@ -136,9 +143,12 @@ package com.zillix.zlxnape
 				}
 			}
 			
+			// Create bitmap data using the bounds.
 			var bounds:Rectangle = new Rectangle(minPoint.x, minPoint.y, maxPoint.x - minPoint.x, maxPoint.y - minPoint.y);
 			var bitmapData:BitmapData = new BitmapData(bounds.width, bounds.height, true);
 			bitmapData.fillRect(new Rectangle(0, 0, bounds.width, bounds.height), 0x000000);
+			
+			// Popuplate the bitmap data with the pixel colors.
 			for each (pixel in pixels)
 			{
 				bitmapData.setPixel32(pixel.x - minPoint.x, pixel.y - minPoint.y, color);

@@ -30,8 +30,8 @@ package com.zillix.zlxnape.demos
 	public class Player extends ZlxNapeSprite 
 	{
 		
-		public var X_SPEED:int = 40;
-		public var JUMP_SPEED:int = 50;
+		public var xSpeed:int = 40;
+		public var jumpSpeed:int = 50;
 		
 		private var _canJump:Boolean = false;
 		
@@ -106,13 +106,13 @@ package com.zillix.zlxnape.demos
 			
 			if (FlxG.keys.pressed("RIGHT"))
 			{
-				_body.velocity.x = X_SPEED;
+				_body.velocity.x = xSpeed;
 				keyPressed = true;
 			}
 			
 			if (FlxG.keys.pressed("LEFT"))
 			{
-				_body.velocity.x = -X_SPEED;
+				_body.velocity.x = -xSpeed;
 				keyPressed = true;
 			}
 			
@@ -121,7 +121,7 @@ package com.zillix.zlxnape.demos
 				if (_canJump)
 				{
 					_canJump = false;
-					_body.applyImpulse(new Vec2(0, -JUMP_SPEED));
+					_body.applyImpulse(new Vec2(0, -jumpSpeed));
 					keyPressed = true;
 				}
 			}

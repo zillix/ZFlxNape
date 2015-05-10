@@ -23,7 +23,7 @@ package com.zillix.zlxnape.demos
 		
 		override protected function setUpPlayer() : void
 		{
-			_player = new Player(10, 10);
+			_player = new Player(300, 300);
 			_player.createBody(20, 20, new BodyContext(_space, _bodyRegistry));
 			add(_player);
 		}
