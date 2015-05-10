@@ -2,7 +2,12 @@ package com.zillix.zlxnape
 {
 	
 	/**
-	 * ...
+	 * Tracks the enums for various interaction groups.
+	 * These are used to filter collisions between different objects.
+	 * In reality, you'll want to copy this file or extend it on your own.
+	 * 
+	 * The interaction groups in Nape are used as bit flags, so each group needs to be
+	 * a power of 2.
 	 * @author zillix
 	 */
 	public class InteractionGroups 

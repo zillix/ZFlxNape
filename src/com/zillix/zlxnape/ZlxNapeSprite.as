@@ -18,8 +18,8 @@ package com.zillix.zlxnape
 	import com.zillix.utils.ZMathUtils;
 	
 	/**
-	 * Building block of ZlxNape.
-	 * Implementation of a FlxSprite that can contain a Nape Body.
+	 * This is the building block of ZlxNape.
+	 * It is an implementation of a FlxSprite that contain a Nape Body.
 	 * Offers many utility functions.
 	 * @author zillix
 	 */

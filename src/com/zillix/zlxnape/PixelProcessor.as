@@ -1,7 +1,7 @@
 package com.zillix.zlxnape 
 {
 	/**
-	 * ...
+	 * This class is used to 
 	 * @author zillix
 	 */
 	
@@ -14,9 +14,29 @@ package com.zillix.zlxnape
 	import nape.geom.Vec2;
 	import nape.shape.ShapeList;
 	import org.flixel.FlxPoint;
+	
+	
 
 	public class PixelProcessor
 	{
+		// Each pixel is a [scale x scale] square body.
+		public static const SIMPLE_SQUARE:uint = 1;
+		
+		// Similar to SIMPLE_SQUARE, but horizontally-adjacent squares get combined into one rectangle.
+		// Very useful for optimizing bodies in large terrain.
+		public static const SIMPLE_RECTANGLE_HORIZONTAL:uint = 2;
+		
+		// Same as SIMPLE_SQUARE, but ignores colors
+		public static const SIMPLE_SINGLE_BODY:uint = 3;
+		
+		// Same as SIMPLE_SINGLE_BODY, but caches the pixel color for each shape
+		public static const COLOR_SINGLE_BODY:uint = 4;
+		
+		// Simple rectangle horizontal + single body
+		public static const RECTANGLE_HORIZONTAL_SINGLE_BODY:uint = 5;
+	
+		
+		
 		private var _scale:Number;
 		private var _mode:uint;
 		private var _bodyMap:BodyMap;
@@ -38,7 +58,7 @@ package com.zillix.zlxnape
 			
 			if (mode == 0)
 			{
-				mode = PolygonReader.SIMPLE_SQUARE;
+				mode = PixelProcessor.SIMPLE_SQUARE;
 			}
 			
 			_mode = mode;
@@ -59,103 +79,108 @@ package com.zillix.zlxnape
 				return;
 			}
 			
+			// Don't process invalid pixels
 			if (color == EMPTY || color == CLEAR)
 			{
 				return;
 			}
 			
-			if (_mode == PolygonReader.SIMPLE_SQUARE
-				|| _mode == PolygonReader.SIMPLE_RECTANGLE_HORIZONTAL
-				|| _mode == PolygonReader.RECTANGLE_HORIZONTAL_SINGLE_BODY
-				|| _mode == PolygonReader.SIMPLE_SINGLE_BODY
-				|| _mode == PolygonReader.COLOR_SINGLE_BODY)
+			// Cache the color, so we can retreive them later if we want.
+			if (_mode == COLOR_SINGLE_BODY)
 			{
+				_shapeColors.push(color);
+			}
+			
+			
+			// In single-body mode, treat every pixel as if they were the same color
+			if (_mode == SIMPLE_SINGLE_BODY
+				|| _mode == RECTANGLE_HORIZONTAL_SINGLE_BODY
+				|| _mode == COLOR_SINGLE_BODY)
+			{
+				color = BLACK;
+			}
+			
+			// Fetch the corresponding body for this color, if it exists.
+			// If not, create a new body.
+			var body:Body;
+			if (_bodyMap.hasBodyOfColor(color))
+			{
+				body = _bodyMap.getBodyByColor(color);
+			}
+			else
+			{
+				body = new Body();
+				_bodyMap.addBody(body, color);
+			}
+			
+			// Register the pixel
+			_bodyMap.addPixel(body, color, new FlxPoint(column, row));
+			
+			var x:Number = column * _scale;
+			var y:Number = row * _scale;
+			
+			// Track the positions and quantities.
+			// Used to calculate the center at the end.
+			var point:Point;
+			if (color in _positionSumsByColor)
+			{
+				point = _positionSumsByColor[color];
+				point.x += x;
+				point.y += y;
+			}
+			else
+			{
+				point = new Point(x, y);
+			}
+			
+			
+			var pixelCount:int = 0;
+			if (color in _numPixelsByColor)
+			{
+				pixelCount = _numPixelsByColor[color];
+			}
+			
+			_positionSumsByColor[color] = point;
+			_numPixelsByColor[color] = pixelCount + 1;
+			
+			
+			
+			// In modes that coalesce rectangles horizontally, join
+			// 	horizontally adjacent shapes into the same shape.
+			var shape:Shape;
+			if ((_mode == SIMPLE_RECTANGLE_HORIZONTAL
+					|| _mode == RECTANGLE_HORIZONTAL_SINGLE_BODY)
+				&& body.shapes.length > 0)
+			{
+				var lastShape:Shape = body.shapes.at(0);
 				
-				if (_mode == PolygonReader.COLOR_SINGLE_BODY)
+				// Assumes each shape is a rectangle, with vert 0 as the topleft and vert 1 as the topright
+				var point1:Vec2 = lastShape.castPolygon.localVerts.at(0);
+				var point2:Vec2 = lastShape.castPolygon.localVerts.at(1);
+				if (point1.y == y
+					&& point2.x == x)
 				{
-					_shapeColors.push(color);
-				}
-				
-				
-				if (_mode == PolygonReader.SIMPLE_SINGLE_BODY
-					|| _mode == PolygonReader.RECTANGLE_HORIZONTAL_SINGLE_BODY
-					|| _mode == PolygonReader.COLOR_SINGLE_BODY)
-				{
-					color = BLACK;
-				}
-				
-				var body:Body;
-				if (_bodyMap.hasBodyOfColor(color))
-				{
-					body = _bodyMap.getBodyByColor(color);
-				}
-				else
-				{
-					body = new Body();
-					_bodyMap.addBody(body, color);
-				}
-				
-				_bodyMap.addPixel(body, color, new FlxPoint(column, row));
-				
-				var x:Number = column * _scale;
-				var y:Number = row * _scale;
-				
-				var point:Point;
-				if (color in _positionSumsByColor)
-				{
-					point = _positionSumsByColor[color];
-					point.x += x;
-					point.y += y;
-				}
-				else
-				{
-					point = new Point(x, y);
-				}
-				
-				
-				var pixelCount:int = 0;
-				if (color in _numPixelsByColor)
-				{
-					pixelCount = _numPixelsByColor[color];
-				}
-				
-				_positionSumsByColor[color] = point;
-				_numPixelsByColor[color] = pixelCount + 1;
-				
-				
-				
-				var shape:Shape;
-				if ((_mode == PolygonReader.SIMPLE_RECTANGLE_HORIZONTAL
-						|| _mode == PolygonReader.RECTANGLE_HORIZONTAL_SINGLE_BODY)
-					&& body.shapes.length > 0)
-				{
-					var lastShape:Shape = body.shapes.at(0);
-					
-					// Assumes each shape is a rectangle, with vert 0 as the topleft and vert 1 as the topright
-					var point1:Vec2 = lastShape.castPolygon.localVerts.at(0);
-					var point2:Vec2 = lastShape.castPolygon.localVerts.at(1);
-					if (point1.y == y
-						&& point2.x == x)
-					{
-						var lastShapeX:Number = point1.x;
-						var lastShapeWidth:Number = point2.x - lastShapeX;
-						body.shapes.remove(lastShape);
-						shape = new Polygon(Polygon.rect(lastShapeX, y, _scale + lastShapeWidth, _scale));
-					}
-					else
-					{
-						shape = new Polygon(Polygon.rect(x, y, _scale, _scale));
-					}
+					var lastShapeX:Number = point1.x;
+					var lastShapeWidth:Number = point2.x - lastShapeX;
+					body.shapes.remove(lastShape);
+					shape = new Polygon(Polygon.rect(lastShapeX, y, _scale + lastShapeWidth, _scale));
 				}
 				else
 				{
 					shape = new Polygon(Polygon.rect(x, y, _scale, _scale));
 				}
-				
-				body.shapes.add(shape);
 			}
+			else
+			{
+				shape = new Polygon(Polygon.rect(x, y, _scale, _scale));
+			}
+			
+			body.shapes.add(shape);
 		}
 		
+		/*
+		 * Repositions all of the bodies so that they are centered correctly.
+		 */
 		private function finalProcessing() : void
 		{
 			var point:Point;
@@ -174,13 +199,17 @@ package com.zillix.zlxnape
 				}
 			}
 			
-			if (_mode == PolygonReader.COLOR_SINGLE_BODY)
+			if (_mode == COLOR_SINGLE_BODY)
 			{
 				_shapeColors.reverse();
 				_bodyMap.setShapeColors(_shapeColors);
 			}
 		}
 		
+		/*
+		 * Assume that ones a bodyMap is requested, we've finished reading all of the pixels.
+		 */
+		 
 		public function getBodyMap() : BodyMap
 		{
 			if (!_finalized)

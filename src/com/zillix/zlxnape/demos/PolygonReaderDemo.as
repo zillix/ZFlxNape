@@ -5,6 +5,7 @@ package com.zillix.zlxnape.demos
 	import com.zillix.zlxnape.BodyRegistry;
 	import com.zillix.zlxnape.PolygonReader;
 	import com.zillix.zlxnape.ZlxNapeSprite;
+	import com.zillix.zlxnape.PixelProcessor;
 	import nape.phys.Body;
 	import nape.geom.Vec2;
 	import org.flixel.FlxPoint;
@@ -22,7 +23,7 @@ package com.zillix.zlxnape.demos
 		{
 			var scale:FlxPoint = new FlxPoint(SCALE, SCALE);
 			var polygonReader:PolygonReader = new PolygonReader(SCALE);
-			var bodyMap:BodyMap = polygonReader.readPolygon(PixelTest, -1, PolygonReader.SIMPLE_RECTANGLE_HORIZONTAL);
+			var bodyMap:BodyMap = polygonReader.readPolygon(PixelTest, -1, PixelProcessor.SIMPLE_RECTANGLE_HORIZONTAL);
 			
 			var playerBody:Body = bodyMap.getBodyByIndex(0);
 			var context:BodyContext = new BodyContext(_space, _bodyRegistry);

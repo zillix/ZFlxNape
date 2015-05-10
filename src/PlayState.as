@@ -32,8 +32,11 @@ package
 	import nape.space.*;
 	import nape.util.*;
 	
+	/**
+	 * This is a super straightforward wrapper that loads up various demos.
+	 * @author zillix
+	 */
 	
-
 	public class PlayState extends FlxState
 	{
 		public static var instance:PlayState;

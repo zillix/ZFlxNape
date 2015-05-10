@@ -32,7 +32,9 @@ package com.zillix.zlxnape
 		public function readImage(ImageClass:Class, pixelScale:int, bodyContext:BodyContext) : void
 		{
 			_polygonReader = new PolygonReader(pixelScale);
-			_bodyMap = _polygonReader.readPolygon(ImageClass ,-1, PolygonReader.COLOR_SINGLE_BODY);
+			
+			// Read the body, joining all colors into the same body.
+			_bodyMap = _polygonReader.readPolygon(ImageClass ,-1, PixelProcessor.COLOR_SINGLE_BODY);
 			loadGraphic(ImageClass);
 			this.scale.x = pixelScale;
 			this.scale.y = pixelScale;

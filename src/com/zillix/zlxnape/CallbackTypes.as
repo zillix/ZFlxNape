@@ -4,6 +4,7 @@ package com.zillix.zlxnape
 	
 	/**
 	 * List of callback types, used for distinguishing collisions.
+	 * In practical use, you'll want to add to this or copy it for your own use.
 	 * @author zillix
 	 */
 	public class CallbackTypes 

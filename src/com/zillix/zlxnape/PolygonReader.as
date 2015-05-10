@@ -14,23 +14,6 @@ package com.zillix.zlxnape
 	 */
 	public class PolygonReader 
 	{
-		// Each pixel is a [scale x scale] square body.
-		public static const SIMPLE_SQUARE:uint = 1;
-		
-		// Similar to SIMPLE_SQUARE, but horizontally-adjacent squares get combined into one rectangle.
-		// Very useful for optimizing bodies in large terrain.
-		public static const SIMPLE_RECTANGLE_HORIZONTAL:uint = 2;
-		
-		// Same as SIMPLE_SQUARE, but ignores colors
-		public static const SIMPLE_SINGLE_BODY:uint = 3;
-		
-		// Same as SIMPLE_SINGLE_BODY, but caches the pixel color for each shape
-		public static const COLOR_SINGLE_BODY:uint = 4;
-		
-		// Simple rectangle horizontal + single body
-		public static const RECTANGLE_HORIZONTAL_SINGLE_BODY:uint = 5;
-	
-		
 		private var _defaultScale:Number;
 		function PolygonReader(defaultScale:Number )
 		{
