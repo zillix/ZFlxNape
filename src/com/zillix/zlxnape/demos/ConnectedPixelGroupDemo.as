@@ -35,6 +35,10 @@ package com.zillix.zlxnape.demos
 			var boxList2:Vector.<ZlxNapeSprite> = new Vector.<ZlxNapeSprite>();
 			
 			var spawnedBox:ZlxNapeSprite;
+			
+			const BOX_WIDTH:int = 20;
+			const BUFFER_DIST:int = 30;
+			
 			for (var i:int = 0; i < 8; i++)
 			{
 				for (var j:int = 0; j < 8; j++)
@@ -48,8 +52,8 @@ package com.zillix.zlxnape.demos
 						blockColor = 0xff0000ff;
 					}
 					
-					spawnedBox = spawnBox(200 + i * 30,
-						100 + j * 30, 20, 0, blockColor);
+					spawnedBox = spawnBox(FlxG.width / 5 + i * BUFFER_DIST,
+						FlxG.height / 5 + j * BUFFER_DIST, BOX_WIDTH, 0, blockColor);
 					spawnedBox.canRotate = false;
 					spawnedBox.collisionGroup = InteractionGroups.BOX;
 					spawnedBox.collisionMask = ~InteractionGroups.BOX;
@@ -95,10 +99,10 @@ package com.zillix.zlxnape.demos
 			}
 		}
 		
-		override protected function get instructionsText() : String
+		override public function get instructionsText() : String
 		{
-			return super.instructionsText + "\n\n\n\n\nLeft: Contract Blue" +
-				"\nRight: Contract Red";
+			return super.instructionsText + "\nLeft Arrow: Contract Blue" +
+				"\nRight Arrow: Contract Red";
 		}
 	}
 

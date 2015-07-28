@@ -23,7 +23,7 @@ package com.zillix.zlxnape.demos
 		
 		override protected function setUpPlayer() : void
 		{
-			_player = new Player(300, 300);
+			_player = new Player(FlxG.width / 2, FlxG.height / 2);
 			_player.createBody(20, 20, new BodyContext(_space, _bodyRegistry));
 			add(_player);
 		}
@@ -42,7 +42,7 @@ package com.zillix.zlxnape.demos
 			}
 		}
 		
-		override protected function get instructionsText() : String
+		override public function get instructionsText() : String
 		{
 			return super.instructionsText + "\nSpace: Extend" +
 			"\nControl: Contract" +

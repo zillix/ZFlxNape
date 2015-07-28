@@ -7,6 +7,7 @@ package
 	import com.zillix.zlxnape.demos.TentacleDemo;
 	import com.zillix.zlxnape.demos.WaterDemo;
 	import com.zillix.zlxnape.demos.ZlxNapeDemo;
+	import flash.events.Event;
 	
 	import com.zillix.utils.ZGroupUtils;
 	
@@ -43,15 +44,20 @@ package
 		
 		private var _activeDemo:ZlxNapeDemo;
 		private var _demoText:FlxText;
+		private var _instructions:FlxText;
 		
 		private var _demoList:Vector.<Class>;
+		private var _demoLayer:FlxGroup;
 		
 		override public function create():void
 		{
 			instance = this;
-			FlxG.bgColor = 0xffffffff;
+			FlxG.bgColor = 0xff000000;
 			
-			_demoText = new FlxText(50, 30, 200,
+			_demoLayer = new FlxGroup();
+			add(_demoLayer);
+			
+			_demoText = new FlxText(10, 10, 200,
 				"1: Tentacles" + 
 				"\n2: Pixel Body Reader" + 
 				"\n3: Colored bodies" + 
@@ -59,8 +65,14 @@ package
 				"\n5: Underwater" + 
 				"\n\nClick: Spawn box" + 
 				"\n\nP: Toggle debug draw");
-			_demoText.setFormat(null, 8, 0x000000);
+			_demoText.setFormat(null, 12, 0xffffffff);
+			_demoText.shadow = 0xff000000;
 			add(_demoText);
+			
+			_instructions = new FlxText(0, FlxG.height - 80, FlxG.width);
+			_instructions.setFormat(null, 12, 0xffffffff, "center");
+			_instructions.shadow = 0xff000000;
+			add(_instructions);
 			
 			_demoList = Vector.<Class>(
 				[
@@ -76,7 +88,7 @@ package
 			
 			Mouse.show();
 			
-			
+			FlxG.stage.dispatchEvent(new Event(Event.DEACTIVATE));
 		}
 		
 		override public function update():void
@@ -119,11 +131,12 @@ package
 			{
 				if (_activeDemo != null)
 				{
-					remove(_activeDemo);
+					_demoLayer.remove(_activeDemo);
 					_activeDemo.cleanUp();
 				}
 				_activeDemo = demo;
-				add(_activeDemo);
+				_demoLayer.add(_activeDemo);
+				_instructions.text = demo.instructionsText;
 			}
 		}
 	}

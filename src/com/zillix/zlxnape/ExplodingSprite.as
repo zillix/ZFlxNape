@@ -78,7 +78,7 @@ package com.zillix.zlxnape
 					velocityVector.addeq(tangentVector.normalise().mul(body.angularVel * comVector.length))
 				}
 				var color:uint = _bodyMap.shapeColors[index];
-				box = _boxSpawner.spawnBox(worldVerts.at(0).x, worldVerts.at(0).y, 20, angle, color);
+				box = _boxSpawner.spawnBox(worldVerts.at(0).x, worldVerts.at(0).y, scale.x, angle, color);
 				box.body.velocity.set(velocityVector);
 				
 				index++;

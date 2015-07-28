@@ -10,6 +10,7 @@ package com.zillix.zlxnape.demos
 	import nape.phys.Body;
 	import nape.geom.Vec2;
 	import org.flixel.FlxPoint;
+	import org.flixel.FlxG;
 	/**
 	 * Uses the PixelBodyReader to read several bodies from the same input image.
 	 * @author zillix
@@ -18,14 +19,11 @@ package com.zillix.zlxnape.demos
 	{
 		[Embed(source = "data/pixelTest1.png")]	public var PixelTest:Class;
 		
-		public static const SCALE:int = 20;
-		public static const SCALE_POINT:FlxPoint = new FlxPoint(SCALE, SCALE);
-		
 		private var _bodyMap:BodyMap;
 		
 		public function PixelBodyReaderDemo() 
 		{
-			var pixelBodyReader:PixelBodyReader  = new PixelBodyReader(SCALE);
+			var pixelBodyReader:PixelBodyReader  = new PixelBodyReader(scale);
 			_bodyMap = pixelBodyReader.readPixels(PixelTest, -1, PixelProcessor.SIMPLE_RECTANGLE_HORIZONTAL);
 			
 			super();
@@ -35,8 +33,8 @@ package com.zillix.zlxnape.demos
 			for (var i:int = 1; i < _bodyMap.bodyCount; i++)
 			{
 				var pillarBody:Body = _bodyMap.getBodyByIndex(i);
-				var pillar:ZlxNapeSprite = new ZlxNapeSprite(100 + i * 100, 350);
-				pillar.scale = SCALE_POINT;
+				var pillar:ZlxNapeSprite = new ZlxNapeSprite(FlxG.width / 5 + i * FlxG.width / 6, FlxG.height * 2 / 3);
+				pillar.scale = scalePoint;
 				
 				// NOTE: Full disclosure, I'm not completely sure why the bodies need to be shifted.
 				pillarBody.translateShapes(Vec2.weak( -12, -4));
@@ -54,13 +52,13 @@ package com.zillix.zlxnape.demos
 		
 		override protected function setUpPlayer() : void
 		{
-			_player = new Player(200, 100);
+			_player = new Player(FlxG.width / 2, FlxG.height / 4);
 			
 			var playerBody:Body = _bodyMap.getBodyByIndex(0);
-			_player.scale = SCALE_POINT;
+			_player.scale = scalePoint;
 			
 			// NOTE: Full disclosure, I'm not completely sure why the bodies need to be shifted.
-			playerBody.translateShapes(Vec2.weak(-SCALE / 2, -SCALE / 2));
+			playerBody.translateShapes(Vec2.weak(-scale / 2, -scale / 2));
 			
 			// Extract the pixels from the bodyMap and put them on the sprite
 			_player.pixels = _bodyMap.getBitmapDataForBody(playerBody);
@@ -76,7 +74,7 @@ package com.zillix.zlxnape.demos
 			add(_player);
 		}
 		
-		override protected function get instructionsText() : String
+		override public function get instructionsText() : String
 		{
 			return super.instructionsText + "\nARROWS: Move player";
 		}

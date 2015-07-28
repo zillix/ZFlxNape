@@ -18,8 +18,8 @@ package com.zillix.zlxnape.demos
 		
 		public function ColoredBodyDemo() 
 		{
-			_explodingSprite = new ExplodingSprite(200, 200, this);
-			_explodingSprite.readImage(PixelTest2, 20, new BodyContext(_space, _bodyRegistry));
+			_explodingSprite = new ExplodingSprite(FlxG.width / 2, FlxG.height / 2, this);
+			_explodingSprite.readImage(PixelTest2, scale, new BodyContext(_space, _bodyRegistry));
 			_explodingSprite.body.angularVel = 2;	// Give it a little kick for fun
 			add(_explodingSprite);
 		}
@@ -34,7 +34,7 @@ package com.zillix.zlxnape.demos
 			}
 		}
 		
-		override protected function get instructionsText() : String
+		override public function get instructionsText() : String
 		{
 			return super.instructionsText + "\nSpace: Explode";
 		}

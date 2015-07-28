@@ -38,25 +38,25 @@ package com.zillix.zlxnape.demos
 			_water = new Water(0, 0, FlxG.width, FlxG.height, new BodyContext(_space, _bodyRegistry));
 			add(_water);
 			
-			var plantCount:int = 4;
+			var plantCount:int = 2;
 			var i:int = 0;
 			var plant:Plant;
 			
 			// Fall plants
 			for (i = 0; i < plantCount; ++i)
 			{
-				plant = new Plant(FlxG.width / (plantCount + 1) * (i + 1), 30, _plantsLayer, _context);
+				plant = new Plant(FlxG.width / (plantCount + 1) * (i + 1) - 50, 30, _plantsLayer, _context);
 				_plantsLayer.add(plant);
 			}
 			
 			// Rise plants
 			for (i = 0; i < plantCount; ++i)
 			{
-				plant = new Plant(FlxG.width / (plantCount + 1) * (i + 1), FlxG.height - 30, _plantsLayer, _context, 3, 4, Plant.RISE_PLANT);
+				plant = new Plant(FlxG.width / (plantCount + 1) * (i + 1) - 50, FlxG.height - 30, _plantsLayer, _context, 3, 4, Plant.RISE_PLANT);
 				_plantsLayer.add(plant);
 			}
 			
-			_submarine = new BreathingTube(400, 100, _tubeLayer, _player, _context);
+			_submarine = new BreathingTube(FlxG.width * 2/3, FlxG.height * 1/3, _tubeLayer, _player, _context);
 			_submarine.init();
 			_tubeLayer.add(_submarine);
 		}
@@ -81,7 +81,7 @@ package com.zillix.zlxnape.demos
 			add(_player);
 		}
 		
-		override protected function get instructionsText() : String
+		override public function get instructionsText() : String
 		{
 			return super.instructionsText +
 				"\nSpace: Blow bubbles" +

@@ -29,7 +29,9 @@ package com.zillix.zlxnape.demos
 	import org.flixel.FlxG;
 	
 	/**
-	 * ...
+	 * Parent class for demonstrations.
+	 * Sets up a basic scene that integrates with the Nape engine.
+	 * Good for referencing basic setup!
 	 * @author zillix
 	 */
 	public class ZlxNapeDemo extends FlxGroup implements IBoxSpawner
@@ -66,7 +68,7 @@ package com.zillix.zlxnape.demos
 		public static const CONNECTED_PIXEL_GROUP_DEMO:int = 6;
 		public static const SPRITE_CHAIN_DEMO:int = 4;
 		
-		private var _instructions:FlxText;
+		protected static const DEFAULT_SCALE:int = 15;
 		
 		public function ZlxNapeDemo() : void
 		{
@@ -77,10 +79,6 @@ package com.zillix.zlxnape.demos
 			
 			add(_background);
 			
-			_instructions = new FlxText(0, FlxG.height / 2 - 20, FlxG.width, instructionsText);
-			_instructions.setFormat(null, 20, 0x000000, "center");
-			add(_instructions);
-			
 			_space = new Space(new Vec2(0, GRAVITY));
 			
 			_context = new BodyContext(_space, _bodyRegistry);
@@ -89,27 +87,29 @@ package com.zillix.zlxnape.demos
 			
 			const FLOOR_COLOR:uint = 0xff0000ff;
 			
+			const FLOOR_WIDTH:uint = 20;
+			
 			// Floor
-			var floor:ColorSprite = new ColorSprite(0, 450, FLOOR_COLOR);
-			floor.createBody(640, 30, context, BodyType.STATIC);
+			var floor:ColorSprite = new ColorSprite(0, FlxG.height - FLOOR_WIDTH , FLOOR_COLOR);
+			floor.createBody(FlxG.width, FLOOR_WIDTH, context, BodyType.STATIC);
 			floor.addCbType(CallbackTypes.GROUND);
 			add(floor);
 			
 			// L Wall
 			floor = new ColorSprite(0, 0, FLOOR_COLOR);
-			floor.createBody(30, 480, context, BodyType.STATIC);
+			floor.createBody(FLOOR_WIDTH, FlxG.height, context, BodyType.STATIC);
 			floor.addCbType(CallbackTypes.GROUND);
 			add(floor);
 			
 			// R Wall
-			floor = new ColorSprite(610, 0, FLOOR_COLOR);
-			floor.createBody(30, 480, context, BodyType.STATIC);
+			floor = new ColorSprite(FlxG.width - FLOOR_WIDTH, 0, FLOOR_COLOR);
+			floor.createBody(FLOOR_WIDTH, FlxG.height, context, BodyType.STATIC);
 			floor.addCbType(CallbackTypes.GROUND);
 			add(floor);
 			
 			// Ceiling
 			floor = new ColorSprite(0, 0, FLOOR_COLOR);
-			floor.createBody(640, 30, context, BodyType.STATIC);
+			floor.createBody(FlxG.width, FLOOR_WIDTH, context, BodyType.STATIC);
 			floor.addCbType(CallbackTypes.GROUND);
 			add(floor);
 			
@@ -174,7 +174,7 @@ package com.zillix.zlxnape.demos
 			}
 		}
 		
-		protected function get instructionsText() : String
+		public function get instructionsText() : String
 		{
 			// Overridden by children
 			return "";
@@ -228,17 +228,26 @@ package com.zillix.zlxnape.demos
 		
 		private function onPlayerLand(collision:InteractionCallback) : void
 		{
-			if (_bodyRegistry.getSprite(collision.int1) != null)
+			// Detect when the player collides with the ground.
+			// If the player was falling, allow them to jump again.
+			var colArb:CollisionArbiter = collision.arbiters.at(0) as CollisionArbiter;
+			var obj1:ZlxNapeSprite = _bodyRegistry.getSprite(collision.int1);
+			var obj2:ZlxNapeSprite = _bodyRegistry.getSprite(collision.int2);
+			
+			// There appears to be a bug where the normal is inverted if the int1 body has an id larger than the int2 body.
+			// See: https://groups.google.com/forum/#!topic/nape-physics/GjBHuT0hMqI
+			var normalY:Number = colArb.normal.y;
+			if (collision.int1.id > collision.int2.id)
 			{
-				var colArb:CollisionArbiter = collision.arbiters.at(0) as CollisionArbiter;
-				if (colArb.normal.y < 0)
-				{
-					var obj:ZlxNapeSprite = _bodyRegistry.getSprite(collision.int1);
-					if (obj is Player)
-					{
-						Player(obj).onLand();
-					}
-				}
+				normalY *= -1;
+			}
+			
+			// Normal points from obj1->obj2.
+			// If normal > 0, the player is falling and should trigger landing.
+			if ((obj1 != null && obj1 is Player && normalY > 0)
+				|| (obj2 != null && obj2 is Player && normalY < 0))
+			{
+				Player(obj1).onLand();
 			}
 		}
 		
@@ -246,6 +255,16 @@ package com.zillix.zlxnape.demos
 		{
 			_space.clear();
 			FlxG.stage.removeChild(_debug.display);
+		}
+		
+		protected function get scale() : int
+		{
+			return DEFAULT_SCALE;
+		}
+		
+		protected function get scalePoint() : FlxPoint
+		{
+			return new FlxPoint(scale, scale);
 		}
 	}
 	
