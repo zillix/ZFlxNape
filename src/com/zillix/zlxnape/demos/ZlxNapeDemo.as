@@ -41,7 +41,7 @@ package com.zillix.zlxnape.demos
 		private static const CLEAN_FREQ:int = 1;
 		private var _cleanTime:Number = 0;
 		
-		public var GRAVITY:Number = 70;
+		public var DEFAULT_GRAVITY:Number = 70;
 		public static const FRAME_RATE :Number = 1 / 30;
 		
 		protected var _player:Player;
@@ -79,7 +79,7 @@ package com.zillix.zlxnape.demos
 			
 			add(_background);
 			
-			_space = new Space(new Vec2(0, GRAVITY));
+			_space = new Space(new Vec2(0, gravity));
 			
 			_context = new BodyContext(_space, _bodyRegistry);
 			
@@ -265,6 +265,11 @@ package com.zillix.zlxnape.demos
 		protected function get scalePoint() : FlxPoint
 		{
 			return new FlxPoint(scale, scale);
+		}
+		
+		protected function get gravity() : int
+		{
+			return DEFAULT_GRAVITY;
 		}
 	}
 	

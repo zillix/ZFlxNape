@@ -39,6 +39,12 @@ package com.zillix.zlxnape.demos
 			return super.instructionsText + "\nSpace: Explode";
 		}
 		
+		override protected function get gravity() : int
+		{
+			// No gravity for this demo!
+			return 0;
+		}
+		
 	}
 
 }

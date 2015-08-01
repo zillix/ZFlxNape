@@ -58,12 +58,12 @@ package
 			add(_demoLayer);
 			
 			_demoText = new FlxText(10, 10, 200,
-				"1: Tentacles" + 
-				"\n2: Pixel Body Reader" + 
-				"\n3: Colored bodies" + 
-				"\n4: Connected pixel groups" + 
-				"\n5: Underwater" + 
-				"\n\nClick: Spawn box" + 
+				"1: Underwater" +
+				"\n2: Tentacles" + 
+				"\n3: Pixel Body Reader" + 
+				"\n4: Colored bodies" + 
+				"\n5: Connected pixel groups" +
+				"\nClick: Spawn box" +
 				"\n\nP: Toggle debug draw");
 			_demoText.setFormat(null, 12, 0xffffffff);
 			_demoText.shadow = 0xff000000;
@@ -76,18 +76,18 @@ package
 			
 			_demoList = Vector.<Class>(
 				[
+					WaterDemo,
 					TentacleDemo,
 					PixelBodyReaderDemo,
 					ColoredBodyDemo,
-					ConnectedPixelGroupDemo,
-					WaterDemo
+					ConnectedPixelGroupDemo
 				]
 			);
 			
-			setDemo(4);
+			setDemo(0);
 			
-			Mouse.show();
-			
+			// Start the game paused.
+			// This can be disabled while testing locally.
 			FlxG.stage.dispatchEvent(new Event(Event.DEACTIVATE));
 		}
 		
